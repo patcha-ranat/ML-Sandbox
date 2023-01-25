@@ -1,9 +1,9 @@
-# Projects for testing and learning Machine Learning models
+# Projects for testing and learning ML models
 *by Patcharanat P.*
 
 ## Table of contents
----
 1. Edible or Poisonous Mushroom Classification
+2. Time Series Forecasting using Regression Model for Temperature Prediction
 
 ...
 
@@ -33,3 +33,26 @@ Aspects learned in the project
 - Overfitting checking (accuracy score on a training set and on a test set)
 
 -- see more detail: *mushroom/[mushroom_notebook.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/mushroom/mushroom_notebook.ipynb)*
+
+### 2. Time Series Forecasting using Regression Model for Temperature Prediction
+---
+*folder: regression*
+
+**Overview**
+
+The main purpose of this project is to learn different approach of developing ML model in a regression task which is temperature prediction. The dataset was collected roughly, so there's processes of data cleaning included. Attributes definition of the dataset weren't given, so domain knowledge and comprehensive for data pattern and meaning in this project will be not emphasized. The most represented in this project are **Multivariate Imputer** and **Model evaluation**.
+
+dataset: [Weather Conditions in World War Two](https://www.kaggle.com/datasets/smid80/weatherww2?select=Summary+of+Weather.csv) *By United States National Oceanic and Atmospheric Administration* from Kaggle
+
+Model used in the project
+- RandomForestRegressor
+
+Aspects learned in the project
+- Filling missing value with a Mean or Median value
+- Multivariate feature Imputation (IterativeImputer)
+- (MSE and MAE explaination)
+- A Baseline model & A Benchmark model
+- Normalization (MinMaxScaler, RobustScaler, StandardScaler exclude Normalizer)
+- Using time series cross validator (In progress...)
+
+-- see more detail: *regression/[regression_test.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/regression/regression_test.ipynb)*
