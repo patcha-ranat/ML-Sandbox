@@ -3,7 +3,9 @@
 ## Table of contents
 
 ---
+*By Patcharanat P.*
 
+*Mainly used in [Big-Data-for_Energy-Management Project](https://github.com/Patcharanat/Big-Data-for-Energy-Management)*
 - General Note
     - Hyperparameters Tuning
     - Cross-validation
@@ -27,6 +29,7 @@
 - K-Means → Group Clustering
 - AgglomerativeClustering
 - PCA → Linear dimensionality reduction
+    - KernelPCA (Non-Linear)
 - KNN (K Nearest Neighbors)
 
 ## General Note
