@@ -2,6 +2,7 @@
 *by Patcharanat P.*
 
 ## Table of contents
+0. [**Machine Learning Algorithms Research**](./ML_research.md)
 1. Edible or Poisonous Mushroom Classification
 2. Time Series Forecasting using Regression Model for Temperature Prediction
 
@@ -40,12 +41,12 @@ Aspects learned in the project
 
 **Overview**
 
-The main purpose of this project is to learn different approach of developing ML model in a regression task which is temperature prediction. The dataset was collected roughly, so there's processes of data cleaning included. Attributes definition of the dataset weren't given, so domain knowledge and comprehensive for data pattern and meaning in this project will be not emphasized. The most represented in this project are **Multivariate Imputer** and **Model evaluation**.
+The main purpose of this project is to learn different approach of developing ML model in a regression task which is temperature prediction. The dataset was collected roughly, so there's processes of data cleaning included. Attributes definition of the dataset weren't given, so domain knowledge and comprehensive for data meaning and pattern in this project will be not emphasized. The most represented in this project are **Multivariate Imputer** and **Regression Result Analysis**.
 
 dataset: [Weather Conditions in World War Two](https://www.kaggle.com/datasets/smid80/weatherww2?select=Summary+of+Weather.csv) *By United States National Oceanic and Atmospheric Administration* from Kaggle
 
 Model used in the project
-- RandomForestRegressor
+- RandomForestRegressor with Random Search
 
 Aspects learned in the project
 - Filling missing value with a Mean or Median value
@@ -53,6 +54,8 @@ Aspects learned in the project
 - (MSE and MAE explaination)
 - A Baseline model & A Benchmark model
 - Normalization (MinMaxScaler, RobustScaler, StandardScaler exclude Normalizer)
-- Using time series cross validator (In progress...)
+- Random Forest Tuning
+- Using time series cross validation
+- Dimensional Reduction with PCA and t-SNE (In progress...)
 
 -- see more detail: *regression/[regression_test.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/regression/regression_test.ipynb)*
