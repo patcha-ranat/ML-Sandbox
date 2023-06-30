@@ -626,7 +626,7 @@ XGBoost vs CatBoost vs LightGBM
         - Cross-validation and choosing the wanted score
 - Practical Code:
     
-    ```sql
+    ```python
     from skelarn.decomposition import PCA
     
     # df = pd.read_csv(...)
@@ -668,3 +668,39 @@ XGBoost vs CatBoost vs LightGBM
     - classification → majority vote which class it should fall into
 - It is based on the idea that the observations closest to a given data point are the most "similar" observations in a data set, and we can therefore classify unforeseen points based on the values of the closest existing points.
 - the larger k, the more robust to outliers and produce more stable dicision boundaries
+
+## Anomaly Detection
+
+### Outlier Detection
+- Isolation Forest
+    - use `n_estimators` trees to specify which records are not align with the others
+    - use `contamination` [0, 1] to specify the percentage of outliers we need to detect
+    ```python
+    from sklearn.ensemble import IsolationForest
+
+    if_detector = IsolationForest(n_estimators=10, contamination=0.1).fit(X)
+    if_detect = if_detector.predict(X)
+    ```
+- Local Outlier Factor (LOF)
+    - use density to specify the anomaly which may locate in lower density area
+    - `n_neighbors`: number of neighbors, and `contamination`: percentage of outliers
+    ```python
+    from sklearn.neighbors import LocalOutlierFactor
+
+    lof_detector = LocalOutlierFactor(n_neighbors=20, contamination=0.1)
+    lof_detect = lof_detector.fit_predict(X)
+    ```
+
+### Novelty Detection
+- Local Outlier Factor (LOF)
+    - also able to be used to detect novelty with argument `novelty`=True, and use fit and predict respectively
+- One Class SVM
+    - use Support Vector from RBF Kernel to create boundary to detect novelty 
+    - other hyperparameters: `tol`, `nu`, `gamma` etc. read documentation for more information
+    ```python
+    from sklearn.svm import OneClassSVM
+
+    svm_detector = OneClassSVM(tol=0.1, nu=0.1, gamma=0.1).fit(X)
+    svm_detect = svm_detector.predict(X_new)
+    svm_detect
+    ```
