@@ -12,9 +12,10 @@
     - Imbalanced dataset
     - Overfitting and Regularization
     - Correlation Coefficiency
-    - outlier removal
+    - Outliers removal
     - Exporting an ML model
     - ML Evaluation Visualization
+    - ML Development Step
 - Decision Tree
 - Random Forest
 - SVM
@@ -22,7 +23,6 @@
     - XGBoost
     - Lightgbm
     - Catboost
-- Neural Network
 - Linear Regression → linear regression
 - Logistic Regression → linear classification
 - Naive Bayes → probability
@@ -31,6 +31,8 @@
 - PCA → Linear dimensionality reduction
     - KernelPCA (Non-Linear)
 - KNN (K Nearest Neighbors)
+- Applications
+    - Association Rule
 
 ## General Note
 
@@ -194,20 +196,41 @@
 
 - Removal
     - remove +- 3 std from normal distribution
-    - boxplot → remove dot plot (1.5IQR)
+    - boxplot → remove dot plot (1.5IQR is considered)
     - remove 1st percentile and 99th percentile
-    
+    - **use Z-score when there're no extreme outliers**
+    - **use IQR when there're extreme outliers**
+
     ```python
     import numpy as np
     import from scipy import stats
     
+    # Z-score
     # assume data = DataFrame
-    z = np.abs(stats.zscore(data)) 
+    z = np.abs(stats.zscore(data_column)) 
     threshold = 3
     outliers = np.where(z > threshold)
     
     # DataFrame with no oulier
     data_without_outliers = data[(z < threshold).all(axis=1)]
+
+    # IQR
+    # define the upper and lower bound
+    Q1 = df['col_name'].quantile(0.25)
+    Q3 = df['col_name'].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5*IQR
+    upper = Q3 + 1.5*IQR
+    
+    # Create arrays of Boolean values indicating the outlier rows
+    upper_array = np.where(df['col_name']>=upper)[0]
+    lower_array = np.where(df['col_name']<=lower)[0]
+    
+    # Removing the outliers
+    # Removing the outliers
+    df = df.drop(index=upper_array)
+    df = df.drop(index=lower_array)
+
     ```
     
 - Log-Transformation should be taken first before removal.
@@ -248,13 +271,13 @@ df = pd.read_parquet("file_name.parquet")
 - PCA: Principal Component Plot*
 - Validation Curve*
 - Learning Curve*
-- Elbow plot
+- Elbow plot*
 - Silhouette Plot
 - Class Imbalance plot*
 - Residuals Plot
 - Prediction Error plot
 - Cook’s Distance plot - check outlier
-- Feature importance plot
+- Feature importance plot*
 
 ### ML Development steps
 
@@ -704,3 +727,29 @@ XGBoost vs CatBoost vs LightGBM
     svm_detect = svm_detector.predict(X_new)
     svm_detect
     ```
+
+## Applications
+
+### Association Rule
+
+Indicate the relationship between items in a transaction, can be used in market basket analysis
+
+important metrics:
+- support
+    - how frequent the itemset appears in the dataset
+    - support(itemset) = count_basket(itemset) / total_count_basket
+    - support score range from 0 to 1, "minimum support" can be used to filter out itemset that are not frequent (threshold depends on user)
+- confidence
+    - how likely item B is purchased when item A is purchased
+    - confidence(A→B) = count_basket(itemset (A and B)) / count_basket(A)
+    - confidence score range from 0 to 1, "minimum confidence threshold" can be used to filter out itemset that are not meet the requirement (threshold depends on user)
+- lift
+    - how likely item B is purchased when item A is purchased, how many times increase or decrease of probability compared with normally B purchased
+    - lift(A→B) = confidence(A→B) / support(B)
+    - lift score range from 0 to infinity
+    - lift > 1 → B is likely to be purchased when A is purchased
+    - lift < 1 → B is unlikely to be purchased when A is purchased
+    - lift = 1 → B is independent from A
+
+recommended model: Apriori
+reference: 
