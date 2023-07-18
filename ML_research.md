@@ -7,32 +7,37 @@
 
 *Mainly used in [Big-Data-for_Energy-Management Project](https://github.com/Patcharanat/Big-Data-for-Energy-Management)*
 - General Note
-    - Hyperparameters Tuning
-    - Cross-validation
-    - Imbalanced dataset
-    - Overfitting and Regularization
-    - Correlation Coefficiency
-    - Outliers removal
-    - Exporting an ML model
-    - ML Evaluation Visualization
-    - ML Development Step
-- Decision Tree
-- Random Forest
-- SVM
-- GBM
-    - XGBoost
-    - Lightgbm
-    - Catboost
+    - [Hyperparameters Tuning](#hyperparameters-tuning)
+    - [Cross-validation](#cross-validation-in-machine-learning)
+    - [Imbalanced dataset](#imbalanced-dataset)
+    - [Overfitting and Regularization](#overfitting-and-regularization)
+    - [Correlation Coefficiency](#correlation-coefficiency)
+    - [Outliers removal](#outliers-removal)
+    - [Exporting an ML model as a file](#exporting-an-ml-model-as-a-file)
+    - [ML Evaluation Visualization](#ml-evaluation-visualization)
+    - [ML Development Step](#ml-development-steps)
+- [Decision Tree](#decision-tree)
+- [Random Forest](#random-forest)
+- [GBM](#gradient-boosting)
+    - [AdaBoost](#adaboost)
+    - [XGBoost](#xgboost)
+    - [Lightgbm](#lightgbm)
+    - [Catboost](#catboost)
 - Linear Regression → linear regression
 - Logistic Regression → linear classification
 - Naive Bayes → probability
-- K-Means → Group Clustering
-- AgglomerativeClustering
-- PCA → Linear dimensionality reduction
-    - KernelPCA (Non-Linear)
-- KNN (K Nearest Neighbors)
-- Applications
-    - Association Rule
+- [K-Means](#k-means)
+- [AgglomerativeClustering](#agglomerative-hierarchichy-agglomerative-clustering)
+- [PCA → Linear dimensionality reduction]((#pca-principle-components-analysis))
+    - [KernelPCA (Non-Linear)]((#kernel-pca))
+- [KNN (K Nearest Neighbors)](#knn-k-nearest-neighbors)
+- [Anomaly Detection](#anomaly-detection)
+    - [Outlier Detection](#outlier-detection)
+    - [Novelty Dectection](#novelty-detection)
+- [ARIMA (Autoregressive Integrated Moving Average Model)](#arima-autoregressive-integrated-moving-average-model)
+- [Applications](#applications)
+    - [Association Rule](#association-rule)
+    - [Time series Forecasting Features](#time-series-forecasting-features)
 
 ## General Note
 
@@ -178,7 +183,7 @@
 - Pearson:
     - evaluate the linear relationship between 2 continuous variables
     - the more value of correlation coeff. indicates how perfect a linear relationship is
-- Spearman
+- Spearman: *not researched yet*
 - Kendall:
     - how strong a relationship is between 2 continuous variables
     
@@ -190,6 +195,7 @@
     relevant_features = cor_target[cor_target>=0.25]
     selected_input = relevant_features.index # selected columns' name
     ```
+- [Auto-correlation](#time-series-forecasting-features)
     
 
 ### Outliers Removal
@@ -236,7 +242,7 @@
 - Log-Transformation should be taken first before removal.
 - Use tree-based method model will less impacted by outlier.
 
-### Recommend exporting ML model & File for a better performance
+### Exporting an ML model as a file
 
 - Export Model by joblib
 
@@ -253,7 +259,7 @@ loaded_model = joblib.load("model_name.model")
 loaded_model.predict(...)
 ```
 
-- Export Tabular by parquet
+- Export Tabular by parquet (recommended)
 
 ```python
 # need to "pip install pyarrow" first
@@ -342,8 +348,6 @@ The number of features to consider when looking for the best split. If this valu
 
 ## Random Forest
 
----
-
 - Basic Robust model
 - Random forest is an ensemble tool which takes a subset of observations and a subset of variables to build a decision trees.
 - A big insight into bagging ensembles and random forest was allowing trees to be greedily created from subsamples of the training dataset.
@@ -358,8 +362,6 @@ The number of features to consider when looking for the best split. If this valu
 - OOB score (Out of Bag): unlike the cross-validation test that trains and evaluates different subsets within the data, Out of Bag Method is an evaluation method that tested with unseen data that isn’t used for a trained model showing how well the model performs on *Never seen* data.
 
 ## Gradient Boosting
-
----
 
 **How Gradient Boosting Works**
 
@@ -405,7 +407,7 @@ Studies in the paper preferred a shrinkage value of 0.1, a number of trees in th
 - The minimum tree weight.
 - The regularization terms alpha and lambda.
 - max_features (0.0, 1.0]
-    - Choosing `max_features < n_features`leads to a reduction of variance and an increase in bias.
+    - Choosing `max_features < n_features` leads to a reduction of variance and an increase in bias.
 - number of terminal nodes (max_leaf_nodes)
     - *In both cases the optimal tree size as averaged over 100 targets is L = 6. Increasing the capacity of the base learner by using larger trees degrades performance through “over-fitting”.*
     - *They comment that a good value the number of nodes in the tree (J) is about 6, with generally good values in the range of 4-to-8.*
@@ -728,6 +730,18 @@ XGBoost vs CatBoost vs LightGBM
     svm_detect
     ```
 
+
+## ARIMA (Autoregressive Integrated Moving Average Model)
+
+- AR: Autoregression. A model that uses the dependent relationship between an observation and some number of lagged observations.
+- I: Integrated. The use of differencing of raw observations (e.g. subtracting an observation from an observation at the previous time step) in order to make the time series stationary.
+- MA: Moving Average. A model that uses the dependency between an observation and a residual error from a moving average model applied to lagged observations.
+
+- Parameters
+    - p: The number of lag observations included in the model, also called the lag order.
+    - d: The number of times that the raw observations are differenced, also called the degree of the differencing.
+    - q: The size of moving average window, also called the order of moving average.
+
 ## Applications
 
 ### Association Rule
@@ -752,4 +766,24 @@ important metrics:
     - lift = 1 → B is independent from A
 
 recommended model: Apriori
-reference: 
+
+### Time series Forecasting Features
+- Auto correlation
+    - (pearson) correlation between time series and lagged version of itself
+    - Autocorrelation plot
+        ```python
+        from statsmodels.graphics.tsaplots import plot_acf
+        
+        sample = df[['Date', 'sales']].set_index('Date')
+        plot_acf(sample, lags=30)
+        plt.grid(True)
+        plt.show()
+        ```
+    - The selected point is the lag value must located outside confidence interval
+    - maybe cross-validation to find the best lag value among candidates
+- SMA (Simple Moving Average)
+    - rolling function, with `window`, `min_intervals` arguments
+- SMMA (Smoothed Moving Average)
+    - lag the SMA
+- Fast Fourier Transform
+    - convert time series data into frequency domain to find the dominant cycle.
