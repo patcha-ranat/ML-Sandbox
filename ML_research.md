@@ -1,11 +1,10 @@
 # ML Models Research
+*Note: For educational purpose.*
 
 ## Table of contents
 
----
 *By Patcharanat P.*
 
-*Mainly used in [Big-Data-for_Energy-Management Project](https://github.com/Patcharanat/Big-Data-for-Energy-Management)*
 - General Note
     - [Hyperparameters Tuning](#hyperparameters-tuning)
     - [Cross-validation](#cross-validation-in-machine-learning)
@@ -41,8 +40,6 @@
 
 ## General Note
 
----
-
 ### Hyperparameters tuning
 
 - In a true machine-learning fashion, you’ll ideally ask the machine to perform this exploration and select the optimal model architecture automatically.
@@ -77,13 +74,29 @@
         ```
         
     - RandomizedSearchCV
+        - The number of parameter settings that are sampled is given by `n_iter`. Sampling without replacement is performed when the parameters are presented as a list (like the grid search). But if the parameter is given as a distribution, sampling with replacement is used (recommended).
         
-        ```python
-        from sklearn.model_selection import RandomizedSearchCV
-        
-        random_search = RandomizedSearchCV(estimator=model, param_distributions=param_grid,
-        																		cv=3, n_jobs=-1)
-        ```
+            ```python
+            from sklearn.model_selection import RandomizedSearchCV
+            from scipy.stats import loguniform, randint
+
+            n_iter = 70
+
+            param_dist = {
+                "learning_rate": loguniform(1e-4, 0.1),
+                "n_estimators": randint(100,1000),
+                "max_depth": randint(4, 400) 
+            }
+
+            # Random
+            reg_rand = RandomizedSearchCV(model,
+                                    param_distributions=param_dist,
+                                    n_iter=n_iter,
+                                    cv=5,
+                                    n_jobs=-1,
+                                    scoring='roc_auc',
+                                    random_state=0)
+            ```
         
 - Bayes Search
     - Optimize parameter
@@ -92,23 +105,22 @@
         
         ```python
         from skopt import BayesSearchCV
-        from skopt.space import Real, Categorical, Integer
         
-        search_spaces = {
-        								'C': Real(0.1, 1e+4)
-        								'gamma': Real(1e-6, 1e+1, 'log-uniform')
+        param_grid = {
+            "learning_rate": (0.0001, 0.1, "log-uniform"),
+            "n_estimators": (100,  1000) ,
+            "max_depth": (4, 400) 
         }
-        
-        n_iter_search = 20
-        bayes_search = BayesSeachCV(
-        		model,
-        		search_spaces
-        		n_iters=n_iter_search
-        		cv=5
-        		verbose=3
-        )
-        
-        bayes_search.fit(X_train, y_train)
+
+        reg_bay = BayesSearchCV(estimator=pipe,
+                            search_spaces=param_grid,
+                            n_iter=n_iter,
+                            cv=5,
+                            n_jobs=-1,
+                            scoring='roc_auc',
+                            random_state=0)
+
+        model_bay = reg_bay.fit(X, y)
         
         # bayes_search.best_params_
         # bayes_search.best_estimator_
@@ -183,18 +195,22 @@
 - Pearson:
     - evaluate the linear relationship between 2 continuous variables
     - the more value of correlation coeff. indicates how perfect a linear relationship is
-- Spearman: *not researched yet*
+- Spearman:
+    - evaluate the monotonic relationship between 2 continuous variables which are not strictly linear
+    - the more value of correlation coeff. indicates how perfect a monotonic relationship is
+    - monotonic relationship: when one variable increases, the other variable either increases or decreases
 - Kendall:
-    - how strong a relationship is between 2 continuous variables
-    
-    ```python
-    # Correlation with the output variable
-    cor_target = abs(cor["output_col_name"])
-    
-    # Selecting highly correlated features
-    relevant_features = cor_target[cor_target>=0.25]
-    selected_input = relevant_features.index # selected columns' name
-    ```
+    - Kendall's correlation coefficient is a rank-based measure that quantifies the dependence relationship between variables based on the similarity of their rankings. It is especially useful when dealing with non-linear or ordinal data.
+    - It provides a measure of dependence that is based on the order of the data rather than their actual values.
+    - Kendall's correlation coefficient is specifically designed for ranked or ordinal data, where the focus is on the order or ranking of the values rather than their specific numerical differences.
+        ```python
+        # Correlation with the output variable
+        cor_target = abs(cor["output_col_name"])
+        
+        # Selecting highly correlated features
+        relevant_features = cor_target[cor_target>=0.25]
+        selected_input = relevant_features.index # selected columns' name
+        ```
 - [Auto-correlation](#time-series-forecasting-features)
     
 
@@ -315,8 +331,6 @@ Feature Engineering steps
 7. Feature extraction(This is not exactly included in feature engineering)
 
 ## Decision Tree
-
----
 
 tend to overfit → use random forest instead
 
@@ -620,10 +634,27 @@ XGBoost vs CatBoost vs LightGBM
     - the closer to 0 suggesting and negative value suggest a poor clustering solutions
 - Optimization plays a role of finding the best set of centroids that minimize the sum of squared distances
 
-## Agglomerative hierarchichy (agglomerative clustering)
+## Agglomerative Hierarchichy Clustering
 
-- continually find the closest point and group it into a cluster
-- clustering is explained by dendrogram (and linkage matrix (distance table))
+- Unsupervised Learning to **cluster data with no prior number of clusters (K) needed like K-Means**
+- The algorithm can be calcuclated by:
+    1. Calculate the distance matrix of all samples
+    2. Merge the two closest samples into a cluster
+    3. Update the distance matrix
+    4. Repeat steps 2 and 3 until all samples are merged into a single cluster
+- There're many approaches to calculate the distance between clusters which every approach has its own pros and cons
+    - Single Linkage: distance between two closest points in each cluster
+    - Complete Linkage: distance between two farthest points in each cluster
+    - Average Linkage: average distance between all points in each cluster
+    - Ward Linkage: minimize the variance in each cluster
+- Clustering can be explained by dendrogram (and linkage matrix (proximity table))
+- To choose number of cluster, we generally draw a horizontal line that passes through longest vertical line (the maximum distance between clusters) in dendrogram and count the number of vertical lines that it crosses. The number of vertical lines will be the number of clusters.
+
+***Note:***
+
+- There's also Divisive Clustering which is the opposite of Agglomerative Clustering which is not popular in real world application.
+- Hierarchical clustering is not suitable for large datasets because of its computational complexity which makes K-Means is more proper for large datasets.
+- Hierarchical clustering is more stale than K-means to reproduce the same result, because the algorithm is not based on random initialization.
 
 ## PCA (Principle Components Analysis)
 
