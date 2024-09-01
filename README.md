@@ -5,6 +5,9 @@
 0. [**Machine Learning Algorithms Research**](./ML_research.md)
 1. Edible or Poisonous Mushroom Classification
 2. Time Series Forecasting using Regression Model for Temperature Prediction
+3. MBTI Classification
+    - [Model development notebook](./mbti_ipip/model_dev.ipynb)
+    - Related to [MLOps-ml-system](https://github.com/Patcharanat/MLOps-ml-system) project.
 
 ...
 
