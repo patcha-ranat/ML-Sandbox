@@ -3,14 +3,32 @@
 
 ## Table of Contents
 - [StatQuest](#statquest-note)
-- IBM
+    1. [Introduction](#1-introduction)
+    2. [The Chain Rule](#2-the-chain-rule)
+    3. [Gradient Descent, Step-by-Step](#3-gradient-descent-step-by-step)
+- [IBM Note](#ibm-note)
 
 # StatQuest Note
 
-## Introduction
-- Neural Network consist of notes and connections between nodes
-- weight or estimated parameters first are unknown to a neural network model, but when we fitted the specific dataset to the model, it's calculated for us.
-- curved lines, "**Activation Functions**" are shaped into final graph that can fit the data, and there're many common curved lines we can choose for the neural network, such as "**soft plus**", "**ReLU** (Rectified Linear Unit)", and "**sigmoid**".
+## 1. Introduction
+- Neural Network consist of nodes and connections between nodes
+- **Weights** or estimated parameters (**biases**) first are unknown to a neural network model, but when we fitted the specific dataset to the model, it's calculated for us by **Backpropagation**.
+- Curved lines, "**Activation Functions**" are shaped into final graph that can fit the data, and there're many common curved lines we can choose for the neural network, such as "**soft plus**", "**ReLU** (Rectified Linear Unit)", and "**sigmoid**".
+- Hidden Layers, Hidden Nodes are crucial for anyone who build the NN model.
+- There are rules of thumb for making decisions about the Hidden Layers, you essentially make a guess and see how well the NN performs, adding more layers and nodes if needed.
+- According to math demonstration, we will see that The neural network starts with identical Activation Functions, but the weights and biases on the connection slice them, flip them and stretch them into new shapes which are then added together to get a new curve that is entirely new and could fit the data.
+- So, we could fit any dataset with more hidden layers, and more nodes in each hidden layer.
+
+## 2. The Chain Rule
+- The Chain Rule referred to the same topic that we learned in calculus.
+    - (dz/dx) = (dz/dy) * (dy/dx)
+    - it's all about dependency of rates between multiple variables which can be related with derivative functions.
+- The Chain Rule can applies to the **Residual Sum of Squares**, a commonly used **Loss Function** in ML. (dy/dx = 0, then x = the lowest point)
+![chain_rule_residual](./pictures/chain_rule_residual.png)
+
+## 3. Gradient Descent, Step-by-Step
+*in progress. . .*
+
 
 # IBM Note
 
