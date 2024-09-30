@@ -26,9 +26,9 @@
 - Logistic Regression → linear classification
 - Naive Bayes → probability
 - [K-Means](#k-means)
-- [AgglomerativeClustering](#agglomerative-hierarchichy-agglomerative-clustering)
-- [PCA → Linear dimensionality reduction]((#pca-principle-components-analysis))
-    - [KernelPCA (Non-Linear)]((#kernel-pca))
+- [Agglomerative Hierarchichy Clustering](#agglomerative-hierarchichy-clustering)
+- [PCA (Principle Components Analysis) → Linear dimensionality reduction](#pca-principle-components-analysis)
+    - [KernelPCA (Non-Linear)](#kernel-pca)
 - [KNN (K Nearest Neighbors)](#knn-k-nearest-neighbors)
 - [Anomaly Detection](#anomaly-detection)
     - [Outlier Detection](#outlier-detection)
@@ -517,9 +517,9 @@ etc
     - number of samples in leaf: the number of observations needed to get a good mean estimate.
     - interaction depth: 10+.
     
-    ![GBDT_tuning](./additional_pic/GBDT_tuning.png)
+    ![GBDT_tuning](./pictures/GBDT_tuning.png)
     
-    Summary
+    **Summary**
     
     - eta (learning rate) + number of trees (n_estimators)
         - Examine objective metrics in training/validation to quickly find good configuration
@@ -613,7 +613,7 @@ XGBoost vs CatBoost vs LightGBM
     – bagging fraction
     – num_iterations |
     
-    ![boost_tuning](./additional_pic/boost_tuning.png)
+    ![boost_tuning](./pictures/boost_tuning.png)
     
 
 ## K-Means
