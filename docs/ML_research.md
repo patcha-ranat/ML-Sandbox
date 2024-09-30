@@ -1,47 +1,146 @@
-# ML Models Research
-*Note: For educational purpose.*
+# Machine Learning Research
+*Patcharanat P.*
 
 ## Table of contents
 
-*By Patcharanat P.*
-
-- General Note
+1. [ML Development Processes](#1-ml-development-processes)
+    - [Feature Engineering](#feature-engineering)
+        - Missing Value & Data Augmentation
+        - [Imbalanced Dataset](#imbalanced-dataset)
+        - [Outliers Removal](#outliers-removal)
+        - Unstructure Data
+        - Scalers
+        - Encoding Categorical Data
     - [Hyperparameters Tuning](#hyperparameters-tuning)
     - [Cross-Validation in Machine Learning](#cross-validation-in-machine-learning)
-    - [Imbalanced Dataset](#imbalanced-dataset)
     - [Overfitting and Regularization](#overfitting-and-regularization)
     - [Correlation Coefficiency](#correlation-coefficiency)
-    - [Outliers Removal](#outliers-removal)
     - [Exporting an ML model as a file](#exporting-an-ml-model-as-a-file)
     - [ML Evaluation Visualization](#ml-evaluation-visualization)
-    - [ML Development Step](#ml-development-steps)
-- [Decision Tree](#decision-tree)
-- [Random Forest](#random-forest)
-- [GBM](#gradient-boosting)
-    - [AdaBoost](#adaboost)
-    - [XGBoost](#xgboost)
-    - [Lightgbm](#lightgbm)
-    - [Catboost](#catboost)
-- Linear Regression → linear regression
-- Logistic Regression → linear classification
-- Naive Bayes → probability
-- [K-Means](#k-means)
-- [Agglomerative Hierarchichy Clustering](#agglomerative-hierarchichy-clustering)
-- [PCA (Principle Components Analysis) → Linear dimensionality reduction](#pca-principle-components-analysis)
+2. [ML Models / Algorithms](#2-ml-models--algorithms)
+    - [Decision Tree](#decision-tree)
+    - [Random Forest](#random-forest)
+    - [GBM](#gradient-boosting)
+        - [AdaBoost](#adaboost)
+        - [XGBoost](#xgboost)
+        - [Lightgbm](#lightgbm)
+        - [Catboost](#catboost)
+        - [XGBoost vs CatBoost vs LightGBM](#xgboost-vs-catboost-vs-lightgbm)
+    - Linear Regression → linear regression
+    - Logistic Regression → linear classification
+    - Naive Bayes → probability
+    - [K-Means](#k-means)
+    - [Agglomerative Hierarchichy Clustering](#agglomerative-hierarchichy-clustering)
+    - [PCA (Principle Components Analysis) → Linear dimensionality reduction](#pca-principle-components-analysis)
     - [KernelPCA (Non-Linear)](#kernel-pca)
-- [KNN (K Nearest Neighbors)](#knn-k-nearest-neighbors)
-- [Anomaly Detection](#anomaly-detection)
-    - [Outlier Detection](#outlier-detection)
-    - [Novelty Dectection](#novelty-detection)
-- [ARIMA (Autoregressive Integrated Moving Average Model)](#arima-autoregressive-integrated-moving-average-model)
-- [Applications](#applications)
+    - [KNN (K Nearest Neighbors)](#knn-k-nearest-neighbors)
+    - [Anomaly Detection](#anomaly-detection)
+        - [Outlier Detection](#outlier-detection)
+        - [Novelty Dectection](#novelty-detection)
+    - [ARIMA (Autoregressive Integrated Moving Average Model)](#arima-autoregressive-integrated-moving-average-model)
+3. [Applications](#3-applications)
     - [Association Rule](#association-rule)
     - [Time series Forecasting Features](#time-series-forecasting-features)
     - [Product Recommendation](#product-recommendation)
 
-## General Note
+## 1. ML Development Processes
 
-### Hyperparameters tuning
+ML development involves multiple steps including other processes, beside finding the best algorithm for the dataset, which are:
+- Feature Engineering
+- Feature Selection
+- Model Creation
+- [Hyperparameter Tuning](https://www.naukri.com/learning/articles/hyperparameter-tuning-beginners-tutorial/)
+- Model Deployment
+- Incremental Learning
+
+Most Topics are elaborated in this docs, but some are still waiting for further explroation, and some are linked to another related repository.
+
+### Feature Engineering
+
+Feature Engineering steps
+1. Exploratory Data Analysis
+    - Profiling dataset, exploring dataset characteristic
+2. [Handling missing values](https://www.naukri.com/learning/articles/handling-missing-values-beginners-tutorial/)
+    - Drop null values, Fill with statistic values (mean/median), imputed by ML techniques
+3. Handling imbalanced dataset
+4. Handling outliers
+5. Unstructured manner
+6. Scaling down the data (Standardization and Normalization)
+7. [Converting categorical data to numerical data (One hot encoding, Label encoding)](https://www.naukri.com/learning/articles/one-hot-encoding-vs-label-encoding/)
+8. Feature extraction (This is not exactly included in feature engineering)
+
+#### Imbalanced Dataset
+
+- Choose Proper Evaluation Metric: For an imbalanced class dataset F1 score
+- Resampling (Oversampling and Undersampling):
+    - we can randomly delete rows from the majority class to match them with the minority class which is called undersampling.
+    - we can oversample the minority class using replacement. This technique is called oversampling.
+    - Using resample() from sklearn.utils
+        
+        ```python
+        from sklearn.utils import resample()
+        #create two different dataframe of majority and minority class 
+        df_majority = df_train[(df_train['Is_Lead']==0)] 
+        df_minority = df_train[(df_train['Is_Lead']==1)] 
+        # upsample minority class
+        # 0: 131177, 1: 40830
+        df_minority_upsampled = resample(df_minority, 
+                                         replace=True,    # sample with replacement
+                                         n_samples= 131177, # to match majority class
+                                         random_state=0)  # reproducible results
+        # Combine majority class with upsampled minority class
+        df_upsampled = pd.concat([df_minority_upsampled, df_majority])
+        ```
+        
+    - Using SMOTE: Synthetic Minority Oversampling Technique from *imblearn*
+    - Using BalancedBaggingClassifier from *imblearn* together with selected estimator
+    - Threshold moving
+
+#### Outliers Removal
+
+- Removal
+    - remove +- 3 std from normal distribution
+    - boxplot → remove dot plot (1.5IQR is considered)
+    - remove 1st percentile and 99th percentile
+    - **use Z-score when there're no extreme outliers**
+    - **use IQR when there're extreme outliers**
+
+    ```python
+    import numpy as np
+    import from scipy import stats
+    
+    # Z-score
+    # assume data = DataFrame
+    z = np.abs(stats.zscore(data_column)) 
+    threshold = 3
+    outliers = np.where(z > threshold)
+    
+    # DataFrame with no oulier
+    data_without_outliers = data[(z < threshold).all(axis=1)]
+
+    # IQR
+    # define the upper and lower bound
+    Q1 = df['col_name'].quantile(0.25)
+    Q3 = df['col_name'].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5*IQR
+    upper = Q3 + 1.5*IQR
+    
+    # Create arrays of Boolean values indicating the outlier rows
+    upper_array = np.where(df['col_name']>=upper)[0]
+    lower_array = np.where(df['col_name']<=lower)[0]
+    
+    # Removing the outliers
+    # Removing the outliers
+    df = df.drop(index=upper_array)
+    df = df.drop(index=lower_array)
+
+    ```
+
+- Log-Transformation should be taken first before removal.
+- Use tree-based method model will less impacted by outlier.
+
+### Hyperparameters Tuning
 
 - In a true machine-learning fashion, you’ll ideally ask the machine to perform this exploration and select the optimal model architecture automatically.
 - Grid Search & Random Search
@@ -143,33 +242,6 @@
     - p = 1 → Leave one out cross validation
         - more preferred → ***it does not suffer from the intensive computation, as number of possible combinations is equal to number of data points in original sample or n.***
 
-### Imbalanced Dataset
-
-- Choose Proper Evaluation Metric: For an imbalanced class dataset F1 score
-- Resampling (Oversampling and Undersampling):
-    - we can randomly delete rows from the majority class to match them with the minority class which is called undersampling.
-    - we can oversample the minority class using replacement. This technique is called oversampling.
-    - Using resample() from sklearn.utils
-        
-        ```python
-        from sklearn.utils import resample()
-        #create two different dataframe of majority and minority class 
-        df_majority = df_train[(df_train['Is_Lead']==0)] 
-        df_minority = df_train[(df_train['Is_Lead']==1)] 
-        # upsample minority class
-        # 0: 131177, 1: 40830
-        df_minority_upsampled = resample(df_minority, 
-                                         replace=True,    # sample with replacement
-                                         n_samples= 131177, # to match majority class
-                                         random_state=0)  # reproducible results
-        # Combine majority class with upsampled minority class
-        df_upsampled = pd.concat([df_minority_upsampled, df_majority])
-        ```
-        
-    - Using SMOTE: Synthetic Minority Oversampling Technique from *imblearn*
-    - Using BalancedBaggingClassifier from *imblearn* together with selected estimator
-    - Threshold moving
-
 ### Overfitting and Regularization
 
 - Overfitting happens when model learns signal as well as noise in the training data and wouldn’t perform well on new data on which model wasn’t trained on.
@@ -213,51 +285,6 @@
         selected_input = relevant_features.index # selected columns' name
         ```
 - [Auto-correlation](#time-series-forecasting-features)
-    
-
-### Outliers Removal
-
-- Removal
-    - remove +- 3 std from normal distribution
-    - boxplot → remove dot plot (1.5IQR is considered)
-    - remove 1st percentile and 99th percentile
-    - **use Z-score when there're no extreme outliers**
-    - **use IQR when there're extreme outliers**
-
-    ```python
-    import numpy as np
-    import from scipy import stats
-    
-    # Z-score
-    # assume data = DataFrame
-    z = np.abs(stats.zscore(data_column)) 
-    threshold = 3
-    outliers = np.where(z > threshold)
-    
-    # DataFrame with no oulier
-    data_without_outliers = data[(z < threshold).all(axis=1)]
-
-    # IQR
-    # define the upper and lower bound
-    Q1 = df['col_name'].quantile(0.25)
-    Q3 = df['col_name'].quantile(0.75)
-    IQR = Q3 - Q1
-    lower = Q1 - 1.5*IQR
-    upper = Q3 + 1.5*IQR
-    
-    # Create arrays of Boolean values indicating the outlier rows
-    upper_array = np.where(df['col_name']>=upper)[0]
-    lower_array = np.where(df['col_name']<=lower)[0]
-    
-    # Removing the outliers
-    # Removing the outliers
-    df = df.drop(index=upper_array)
-    df = df.drop(index=lower_array)
-
-    ```
-    
-- Log-Transformation should be taken first before removal.
-- Use tree-based method model will less impacted by outlier.
 
 ### Exporting an ML model as a file
 
@@ -302,37 +329,9 @@ df = pd.read_parquet("file_name.parquet")
 - Cook’s Distance plot - check outlier
 - Feature importance plot*
 
-### ML Development steps
+## 2. ML Models / Algorithms
 
-Steps
-
-- Feature engineering
-- Feature selection
-- Model creation
-- [Hyperparameter tuning](https://www.naukri.com/learning/articles/hyperparameter-tuning-beginners-tutorial/)
-- Model deployment
-- Incremental learning
-
-cleaning data
-
-- Missing values
-- Outliers
-- Unstructured manner
-- Imbalanced data
-- Categorical data(which needs to be converted to numerical variables)
-
-Feature Engineering steps
-
-1. Exploratory Data Analysis
-2. [Handling missing values](https://www.naukri.com/learning/articles/handling-missing-values-beginners-tutorial/)
-3. Handling imbalanced dataset
-4. Handling outliers
-5. Scaling down the data(Standardization and Normalization)
-6. [Converting categorical data to numerical data(One hot encoding, Label encoding)](https://www.naukri.com/learning/articles/one-hot-encoding-vs-label-encoding/)
-7. Feature extraction(This is not exactly included in feature engineering)
-
-## Decision Tree
-
+### Decision Tree
 tend to overfit → use random forest instead
 
 - criterion (gini)
@@ -361,8 +360,7 @@ The number of features to consider when looking for the best split. If this valu
     - The best value of m depends on the problem, so m should be treated as a tuning parameter.
         - more explain in: https://stats.stackexchange.com/questions/324370/references-on-number-of-features-to-use-in-random-forest-regression
 
-## Random Forest
-
+### Random Forest
 - Basic Robust model
 - Random forest is an ensemble tool which takes a subset of observations and a subset of variables to build a decision trees.
 - A big insight into bagging ensembles and random forest was allowing trees to be greedily created from subsamples of the training dataset.
@@ -376,8 +374,7 @@ The number of features to consider when looking for the best split. If this valu
 - reducing computationally cost by n_jobs or decreasing n_estimators
 - OOB score (Out of Bag): unlike the cross-validation test that trains and evaluates different subsets within the data, Out of Bag Method is an evaluation method that tested with unseen data that isn’t used for a trained model showing how well the model performs on *Never seen* data.
 
-## Gradient Boosting
-
+### Gradient Boosting
 **How Gradient Boosting Works**
 
 1. A loss function to be optimized.
@@ -437,7 +434,6 @@ Studies in the paper preferred a shrinkage value of 0.1, a number of trees in th
 - [CatBoost: gradient boosting with categorical features support](https://arxiv.org/abs/1810.11363), 2017.
 
 ### AdaBoost
-
 The First Boosting Algorithm
 
 - *AdaBoost works by weighting the observations, putting more weight on difficult to classify instances and less on those already handled well. New weak learners are added sequentially that focus their training on the more difficult patterns.*
@@ -451,7 +447,6 @@ The First Boosting Algorithm
 - base_estimator; default = DecisionTree
 
 ### GBM (scikit-learn)
-
 There are many parameters, but this is the default configuration for the algorithm in this library.
 
 - learning_rate=0.1 (shrinkage).
@@ -460,15 +455,11 @@ There are many parameters, but this is the default configuration for the algorit
 - (int → number of samples, float → fraction) the more value → the simpler model
     - min_samples_split=2. [2, 10% of samples (rows)]
     - min_samples_leaf=1. [1, 5% of samples (rows)]
-- subsample=1.0.
-
-etc
-
+- subsample = 1.0
 - max_leaf_nodes coresponding with max_depth; *We found that max_leaf_nodes=k gives comparable results to max_depth=k-1 but is significantly faster to train at the expense of a slightly higher training error.*
 - Use HistGradientBoosting instead for a Large dataset
 
 ### XGBoost
-
 - *The main difference between GradientBoosting is XGBoost is that XGboost uses a regularization technique in it.*
 - Asymmetric tree growth (level-wise tree growth)
 - **n_estimators**: The number of trees in the ensemble, often increased until no further improvements are seen.
@@ -540,7 +531,6 @@ etc
         - You can also reduce stepsize `eta`. Remember to increase `num_round` when you do so.
 
 ### CatBoost
-
 - In Catboost, the main difference that makes it different and better than others is the growing of decision trees in it. In CatBoost the **decision trees which is grown are symmetric.**
 - CatBoost is a boosting algorithm that performs exceptionally very well on categorical datasets. In CatBoost, the categorical features are encoded on the basis of the output columns. So while training or encoding the categorical features, the weightage of the output column will also be considered which makes it higher accurate on categorical datasets.
 - **Greedy search for combination:** CatBoost also automatically combines categorical features, most times two or three. To keep possible combinations limited, CatBoost does not enumerate through all the combinations but rather some of the best, using statistics like category frequency. So, for each tree split, CatBoost adds all categorical features (and their combinations) already used for previous splits in the current tree with all categorical features in the dataset.
@@ -560,7 +550,6 @@ etc
     - etc: don’t forget to use early_stopping_rounds, eval_metric, and eval_set
 
 ### LightGBM
-
 - It is based on three important principles:
     - Weak learners (decision trees)
     - Gradient Optimization
@@ -588,8 +577,7 @@ etc
     - categorical_feature
     - handling imbalanced by is_unbalance and scale_pos_weight
 
-XGBoost vs CatBoost vs LightGBM
-
+### XGBoost vs CatBoost vs LightGBM
 - computational time: XGBoost (Slowest) > LightGBM ~ CatBoost (Fastest) (depends on dataset)
 - parameters to Tune
     
@@ -616,8 +604,7 @@ XGBoost vs CatBoost vs LightGBM
     ![boost_tuning](./pictures/boost_tuning.png)
     
 
-## K-Means
-
+### K-Means
 - Unsupervised Learning
 - Normalization helps to make a better result (check by ARI (adjusted_rand_score))
 - find the optimal K by elbow plot (plot K and Inertia_)
@@ -635,8 +622,7 @@ XGBoost vs CatBoost vs LightGBM
     - the closer to 0 suggesting and negative value suggest a poor clustering solutions
 - Optimization plays a role of finding the best set of centroids that minimize the sum of squared distances
 
-## Agglomerative Hierarchichy Clustering
-
+### Agglomerative Hierarchichy Clustering
 - Unsupervised Learning to **cluster data with no prior number of clusters (K) needed like K-Means**
 - The algorithm can be calcuclated by:
     1. Calculate the distance matrix of all samples
@@ -652,13 +638,11 @@ XGBoost vs CatBoost vs LightGBM
 - To choose number of cluster, we generally draw a horizontal line that passes through longest vertical line (the maximum distance between clusters) in dendrogram and count the number of vertical lines that it crosses. The number of vertical lines will be the number of clusters.
 
 ***Note:***
-
 - There's also Divisive Clustering which is the opposite of Agglomerative Clustering which is not popular in real world application.
 - Hierarchical clustering is not suitable for large datasets because of its computational complexity which makes K-Means is more proper for large datasets.
 - Hierarchical clustering is more stale than K-means to reproduce the same result, because the algorithm is not based on random initialization.
 
-## PCA (Principle Components Analysis)
-
+### PCA (Principle Components Analysis)
 - used in dimensions reduction for linear relationship between variables (features) which not suit to real-case scenario
 - Mathematical step to perform PCA
     1. Calculate Cov (covariance) between all features, in which return Cov Matrix
@@ -705,9 +689,7 @@ XGBoost vs CatBoost vs LightGBM
     print(accuracy_score(y_test, prediction))
     ```
     
-
 ### Kernel PCA
-
 - allowing it to capture more complex and nonlinear relationships between the data points.
 - hyperparameters:
     - n_components
@@ -718,17 +700,16 @@ XGBoost vs CatBoost vs LightGBM
     - gamma → for rbf, poly, sigmoid
         - Default: None → 1/n_features
 
-## KNN (K-Nearest Neighbors)
-
+### KNN (K-Nearest Neighbors)
 - often used in imputation, but also can be used in regression, and classification task
     - regression
     - classification → majority vote which class it should fall into
 - It is based on the idea that the observations closest to a given data point are the most "similar" observations in a data set, and we can therefore classify unforeseen points based on the values of the closest existing points.
 - the larger k, the more robust to outliers and produce more stable dicision boundaries
 
-## Anomaly Detection
+### Anomaly Detection
 
-### Outlier Detection
+#### Outlier Detection
 - Isolation Forest
     - use `n_estimators` trees to specify which records are not align with the others
     - use `contamination` [0, 1] to specify the percentage of outliers we need to detect
@@ -748,7 +729,7 @@ XGBoost vs CatBoost vs LightGBM
     lof_detect = lof_detector.fit_predict(X)
     ```
 
-### Novelty Detection
+#### Novelty Detection
 - Local Outlier Factor (LOF)
     - also able to be used to detect novelty with argument `novelty`=True, and use fit and predict respectively
 - One Class SVM
@@ -762,9 +743,7 @@ XGBoost vs CatBoost vs LightGBM
     svm_detect
     ```
 
-
-## ARIMA (Autoregressive Integrated Moving Average Model)
-
+### ARIMA (Autoregressive Integrated Moving Average Model)
 - AR: Autoregression. A model that uses the dependent relationship between an observation and some number of lagged observations.
 - I: Integrated. The use of differencing of raw observations (e.g. subtracting an observation from an observation at the previous time step) in order to make the time series stationary.
 - MA: Moving Average. A model that uses the dependency between an observation and a residual error from a moving average model applied to lagged observations.
@@ -774,7 +753,7 @@ XGBoost vs CatBoost vs LightGBM
     - d: The number of times that the raw observations are differenced, also called the degree of the differencing.
     - q: The size of moving average window, also called the order of moving average.
 
-## Applications
+## 3. Applications
 
 ### Association Rule
 

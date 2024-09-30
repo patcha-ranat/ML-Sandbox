@@ -1,19 +1,20 @@
-# Projects for testing and learning ML models
+# Machine Learning Sandbox & Research
 *by Patcharanat P.*
 
-## Table of contents
-0. [**Machine Learning Algorithms Research**](./ML_research.md)
-1. Edible or Poisonous Mushroom Classification
-2. Time Series Forecasting using Regression Model for Temperature Prediction
-3. MBTI Classification
+## Table of Contents
+0. **Machine Learning Research**
+    - [Machine Learning Development Research](./docs/ML_research.md)
+        - ML Development Process & Algorithms
+    - [Machine Learning Evaluation](./docs/ML_evaluation.md)
+        - Metrics according to specific tasks
+    - [Deep Learning Research](./docs/DL_research.md)
+1. [Edible or Poisonous Mushroom Classification](#1-edible-or-poisonous-mushroom-classification)
+2. [Time Series Forecasting using Regression Model for Temperature Prediction](#2-time-series-forecasting-using-regression-model-for-temperature-prediction)
+3. [MBTI Classification (MBTI-IPIP)](#3-mbti-classification-mbti---ipip)
     - [Model development notebook](./mbti_ipip/model_dev.ipynb)
     - Related to [MLOps-ml-system](https://github.com/Patcharanat/MLOps-ml-system) project.
 
-...
-
-
-### 1. Edible or Poisonous Mushroom Classification
----
+## 1. Edible or Poisonous Mushroom Classification
 *folder: mushroom*
 
 **Overview**
@@ -38,8 +39,7 @@ Aspects learned in the project
 
 -- see more detail: *mushroom/[mushroom_notebook.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/mushroom/mushroom_notebook.ipynb)*
 
-### 2. Time Series Forecasting using Regression Model for Temperature Prediction
----
+## 2. Time Series Forecasting using Regression Model for Temperature Prediction
 *folder: regression*
 
 **Overview**
@@ -62,3 +62,8 @@ Aspects learned in the project
 - Dimensional Reduction with PCA and t-SNE (In progress...)
 
 -- see more detail: *regression/[regression_test.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/regression/regression_test.ipynb)*
+
+## 3. MBTI Classification (MBTI - IPIP)
+*folder: mbti_ipip*
+
+*documentation is not available yet*
