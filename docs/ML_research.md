@@ -7,11 +7,11 @@
 
 - General Note
     - [Hyperparameters Tuning](#hyperparameters-tuning)
-    - [Cross-validation](#cross-validation-in-machine-learning)
-    - [Imbalanced dataset](#imbalanced-dataset)
+    - [Cross-Validation in Machine Learning](#cross-validation-in-machine-learning)
+    - [Imbalanced Dataset](#imbalanced-dataset)
     - [Overfitting and Regularization](#overfitting-and-regularization)
     - [Correlation Coefficiency](#correlation-coefficiency)
-    - [Outliers removal](#outliers-removal)
+    - [Outliers Removal](#outliers-removal)
     - [Exporting an ML model as a file](#exporting-an-ml-model-as-a-file)
     - [ML Evaluation Visualization](#ml-evaluation-visualization)
     - [ML Development Step](#ml-development-steps)
@@ -37,6 +37,7 @@
 - [Applications](#applications)
     - [Association Rule](#association-rule)
     - [Time series Forecasting Features](#time-series-forecasting-features)
+    - [Product Recommendation](#product-recommendation)
 
 ## General Note
 
@@ -142,7 +143,7 @@
     - p = 1 → Leave one out cross validation
         - more preferred → ***it does not suffer from the intensive computation, as number of possible combinations is equal to number of data points in original sample or n.***
 
-### Imbalanced dataset
+### Imbalanced Dataset
 
 - Choose Proper Evaluation Metric: For an imbalanced class dataset F1 score
 - Resampling (Oversampling and Undersampling):
@@ -818,3 +819,34 @@ recommended model: Apriori
     - lag the SMA
 - Fast Fourier Transform
     - convert time series data into frequency domain to find the dominant cycle.
+
+### Product Recommendation
+1. **Content-Based Filtering (CBF): User-product relationships** – based on users’ individual product preferences.
+    - CBF tracks a user’s actions, such as products bought or clicked on, web pages viewed, time spent browsing various product categories, etc. It then uses this information to create a customer profile. This profile is then compared to the product catalogue to make recommendations.
+2. **Collaborative Filtering (CF): User-user / product-product relationships** – based on similar people likely having similar product preferences.
+    - CF methods involve collecting and analysing information on users’ behaviours and preferences, and predicting what each user will like based on their similarity to other users.
+    - The algorithms most frequently used in CF filtering are the k-nearest neighbours algorithm, and latent factor analysis (LFM).
+3. **Complementary Filtering: Product-product relationships** – based on similar or complementary products that can be categorised into relevant groups.
+    - the system learns the probability of two or more products being bought together.
+    - As such, the algorithms are based around recommending products that are complementary to other products – they are product-defined, as opposed to user-defined, as in CBF and CF.
+4. Hybrid recommendation systems (CF + CBF)
+    - This can be achieved in a number of ways – for example, by making content-based and collaborative-based predictions separately and then combining them, by adding collaborative-based capabilities to a content-based approach (and vice versa), or by purposefully unifying the two approaches into one model.
+
+**Common Challenges**
+- Cold Start
+    - Unknown preferences for new users, and failed to recommend
+    - Solution: applying a popularity-based strategy (Trending product) first and then CBF will kick in.
+- Data Sparsity
+    - User rate just a small number of product, led to data lacking for CF approach 
+    - Solution: Combining collaborative filtering with Naïve Bayes is the solution to this problem.
+- Accuracy
+    - Systems that make recommendations by both comparing the habits of similar users (CF) as well as by offering products that share characteristics with other products the user has rated highly (CBF) usually achieve the most accurate results.
+- Scalability
+    - It’s possible that a recommendation algorithm will work well and produce accurate results with small datasets, yet may start producing inaccurate or inefficient results with large ones. In addition, some algorithms are computationally expensive to run – the larger the dataset, the longer it will take, and the more it will cost the business to analyse and make recommendations from it. Advanced, large-scale assessment methods are required to deal with both issues.
+- Diversity
+    - Another challenge of product recommendation systems is finding ways of increasing diversity without compromising the precision of the system.
+    - While collaborative filtering methods typically use nearest neighbour methods to identify items similar users like, the inverted neighbourhood model – k-furthest neighbours – seeks to identify less similar neighbourhoods for the purpose of creating more diverse recommendations. This is achieved by recommending items disliked by people least similar to the user.
+
+**References**
+- [What are Product Recommendation Engines? And the various versions of them?](https://towardsdatascience.com/what-are-product-recommendation-engines-and-the-various-versions-of-them-9dcab4ee26d5)
+- [How to Build a Product Recommendation System using Machine Learning - netguru](https://www.netguru.com/blog/product-recommendation-machine-learning)
