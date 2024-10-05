@@ -1,4 +1,6 @@
+# data
 *.csv
 *-checkpoint.ipynb
 
+# python environment
 pyenv
