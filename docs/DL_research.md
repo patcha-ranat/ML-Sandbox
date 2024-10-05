@@ -27,7 +27,8 @@
 ![chain_rule_residual](./pictures/chain_rule_residual.png)
 
 ## 3. Gradient Descent, Step-by-Step
-*in progress. . .*
+- Gradient Descent can fit a line to data by finding the optimal values for the **Intercept** and the **Slope**
+    - First, Gradient Descent randomly pickup an intercept point to find sum of the squared Residuals ***(or Loss Function)*** as initial calculation for futher improvement.
 
 
 # IBM Note
@@ -60,3 +61,14 @@
     - GenAI
     - LLM
     - Deepfakes
+
+- Langchain
+    - LLM
+    - Prompts (few-shot prompt)
+    - Chains
+    - Index
+        - Document Loader
+        - Vector DB
+        - Text Spliting
+    - Memory
+    - Agents

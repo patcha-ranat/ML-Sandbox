@@ -29,6 +29,7 @@
     - Linear Regression → linear regression
     - Logistic Regression → linear classification
     - Naive Bayes → probability
+    - [SVM: Support Vector Machine](#svm-support-vector-machine)
     - [K-Means](#k-means)
     - [Agglomerative Hierarchichy Clustering](#agglomerative-hierarchichy-clustering)
     - [PCA (Principle Components Analysis) → Linear dimensionality reduction](#pca-principle-components-analysis)
@@ -603,6 +604,58 @@ There are many parameters, but this is the default configuration for the algorit
     
     ![boost_tuning](./pictures/boost_tuning.png)
     
+### SVM: Support Vector Machine
+- How it works in Concept
+    - When the relationship between variables become more complicated than it can be classified by just a linear, non-linear come to play. SVM is one of them that it can be used in non-linear problems.
+    - when we don’t have a simple line separating two target classes, we can extend our dimension and introduce a new dimension along the z-axis by SVM. So, we can now separate these two classes with a linear represented in multi-dimensional space. When we transform this line back to the original plane, it can map to non-linear problem and being able to explain the non-linear relationship.
+    - SVM tries to find a line/hyperplane (in multidimensional space) that separates these two classes. Then it classifies the new point depending on whether it lies on the positive or negative side of the hyperplane depending on the classes to predict.
+    ![svm_concept](./pictures/svm_concept.png)
+- How it works in Math
+    - SVR Model in Machine Learning aims to find a function that approximates the relationship between the input variables and a continuous target variable while minimizing the prediction error.
+    - Unlike Support Vector Machines (SVMs) used for classification tasks, SVR Model seeks a hyperplane that best fits the data points in a continuous space. This is achieved by mapping the input variables to a high-dimensional feature space and finding the hyperplane that maximizes the margin (distance) between the hyperplane and the closest data points, while also minimizing the prediction error.
+    - SVR Model can handle non-linear relationships between the input and target variables by using a kernel function to map the data to a higher-dimensional space.
+    - Support Vector Regression (SVR) uses the same principle as SVM but for regression problems.
+    - Equations
+        - y = wx+b
+        - +a = wx+b
+        - -a = wx+b
+        - -a < Y- wx+b < +a
+        ![svm_equation](./pictures/svm_equation.png)
+- A Few Important Hyperparameters
+    - Kernel
+        -  A kernel helps us find a hyperplane in the higher dimensional space without increasing the computational cost.
+    - Hyperplane
+        - This is basically a separating line between two data classes in SVM. But in Support Vector Regression, this is the line that will be used to predict the continuous output
+    - Decision Boundary
+        - A decision boundary can be thought of as a demarcation line (for simplification) on one side of which lie positive examples and on the other side lie the negative examples. On this very line, the examples may be classified as either positive or negative. This same concept of SVM will be applied in Support Vector Regression as well
+    - SVR utilizes various kernel functions, such as quadratic, radial basis function, and sigmoid, to handle non-linear relationships in data
+    - Effective hyperparameter tuning, including choosing the right kernel and setting the epsilon parameter, is vital for maximizing SVR performance.
+    - Development
+        - The model requied scaling, since it use distance calculation.
+        - `kernel`, `epsilon` use cross-validation + gridsearch
+- SVM vs SVR
+    - Support Vector Machine (SVM) is mostly utilized for tasks involving classification. The goal is to locate the best hyperplane that divides distinct classes within the feature space. The objective is to increase the distance between the nearest points of distinct classes, which are referred to as support vectors.
+    - SVR is utilized for tasks involving regression. It forecasts values that are continual instead of distinct category labels. SVR aims to maximize the number of data points fitting within a given margin of tolerance (epsilon) while reducing errors outside this range.
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVR, SVC
+
+# separating scaler to avoid data leakage and bias
+x_scaler = StandardScaler()
+y_scaler = StandardScaler()
+scaled_X = x_scaler.fit_transform(X)
+scaled_y = x_scaler.fit_transform(y)
+
+regressor = SVR(kernel = 'rbf')
+regressor.fit(scaled_X, scaled_y)
+
+y_pred = regressor.predict(input())
+y_true = y_scaler.inverse_transform(y_pred)
+```
+
+- **References**
+    - [Support Vector Regression Tutorial for Machine Learning](https://www.analyticsvidhya.com/blog/2020/03/support-vector-regression-tutorial-for-machine-learning/)
 
 ### K-Means
 - Unsupervised Learning
