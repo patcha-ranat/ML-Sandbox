@@ -287,35 +287,45 @@ Feature Engineering steps
         ```
 - [Auto-correlation](#time-series-forecasting-features)
 
-### Exporting an ML model as a file
+### Exporting an ML model and Data model as a file
 
+- Export Model by pickle **(recommended)**
+    ```python
+    import pickle
+
+    with open("model_name_v1.bin", "wb") as f_out: # or '.bin' extension
+        pickle.dump(trained_model, f_out)
+    f_out.close()
+
+    # loaded_model = pickle.load(open("model_name_v1.pkl", "rb"))
+    # loaded_model.predict(input_vector)
+    ```
 - Export Model by joblib
+    ```python
+    import joblib
 
-```python
-import joblib
+    # export model
+    joblib.dump(model, "model_name.model")
 
-# export model
-joblib.dump(model, "model_name.model")
+    # load model
+    loaded_model = joblib.load("model_name.model")
 
-# load model
-loaded_model = joblib.load("model_name.model")
+    # use model
+    loaded_model.predict(...)
+    ```
+- Export Tabular Data by parquet (recommended)
+    ```python
+    # need to "pip install pyarrow" first
 
-# use model
-loaded_model.predict(...)
-```
+    # assume "df" is a tabular we need to export
+    df.to_parquet("file_name.parquet")
 
-- Export Tabular by parquet (recommended)
+    # to read a parquet file
+    import pandas as pd
+    df = pd.read_parquet("file_name.parquet")
+    ```
 
-```python
-# need to "pip install pyarrow" first
 
-# assume "df" is a tabular we need to export
-df.to_parquet("file_name.parquet")
-
-# to read a parquet file
-import pandas as pd
-df = pd.read_parquet("file_name.parquet")
-```
 
 ### ML Evaluation Visualization
 
