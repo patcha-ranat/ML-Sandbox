@@ -11,8 +11,7 @@
 1. [Edible or Poisonous Mushroom Classification](#1-edible-or-poisonous-mushroom-classification)
 2. [Time Series Forecasting using Regression Model for Temperature Prediction](#2-time-series-forecasting-using-regression-model-for-temperature-prediction)
 3. [MBTI Classification (MBTI-IPIP)](#3-mbti-classification-mbti---ipip)
-    - [Model development notebook](./mbti_ipip/model_dev.ipynb)
-    - Related to [MLOps-ml-system](https://github.com/Patcharanat/MLOps-ml-system) project.
+4. [Finance](#4-finance)
 
 ## 1. Edible or Poisonous Mushroom Classification
 *folder: mushroom*
@@ -66,4 +65,22 @@ Aspects learned in the project
 ## 3. MBTI Classification (MBTI - IPIP)
 *folder: mbti_ipip*
 
-*documentation is not available yet*
+- [Model development notebook](./mbti_ipip/model_dev.ipynb)
+- Related to [MLOps-ml-system](https://github.com/Patcharanat/MLOps-ml-system) project.
+
+![kmlops_dev_process.png](./docs/pictures/kmlops_dev_process.png)
+
+About Dataset
+- [Big Five Personality Test - Kaggle](https://www.kaggle.com/datasets/tunguz/big-five-personality-test)
+- [Local Data Dict](./data/codebook.txt)
+- [International Personality Item Pool](https://ipip.ori.org/)
+- [Converting IPIP Item Responses to Scale Scores](https://ipip.ori.org/newScoringInstructions.htm)
+- [Big-Five Factor Markers - Questions Classification](https://ipip.ori.org/newBigFive5broadKey.htm)
+- [Interpreting Individual IPIP Scale Scores](https://ipip.ori.org/InterpretingIndividualIPIPScaleScores.htm)
+- [MBTI - Letters personalities explain](https://www.16personalities.com/articles/our-theory)
+
+## 4. Finance
+*folder: finance*
+
+dataset: [Financial Transactions Dataset: Analytics](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets)
+
