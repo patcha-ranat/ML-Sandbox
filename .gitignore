@@ -7,3 +7,4 @@ finance/data
 
 # python environment
 pyenv
+__pycache__
