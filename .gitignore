@@ -8,6 +8,7 @@ finance/data
 # python environment
 pyenv
 __pycache__
+.ipynb_*
 
 # temp workspace notebook
 temp.ipynb
