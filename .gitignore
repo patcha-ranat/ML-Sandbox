@@ -7,9 +7,16 @@ finance/data
 
 # python environment
 pyenv
+.venv
 __pycache__
+__pycache__/
 .ipynb_*
+uv.lock
 
 # temp workspace notebook
 temp.ipynb
 *_report*
+
+# secret
+_secret*
+.env

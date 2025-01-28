@@ -10,8 +10,11 @@
     - [Deep Learning Research](./docs/DL_research.md)
 1. [Edible or Poisonous Mushroom Classification](#1-edible-or-poisonous-mushroom-classification)
 2. [Time Series Forecasting using Regression Model for Temperature Prediction](#2-time-series-forecasting-using-regression-model-for-temperature-prediction)
-3. [MBTI Classification (MBTI-IPIP)](#3-mbti-classification-mbti---ipip)
-4. [Finance](#4-finance)
+3. [AI-Driven Interpretable Dynamic Customer Segmentation](#3-ai-driven-interpretable-dynamic-customer-segmentation)
+4. [MBTI Classification (MBTI-IPIP)](#3-mbti-classification-mbti---ipip)
+5. [Finance](#4-finance)
+6. [OpenAI Swarm - POC](#6-openai-swarm)
+7. [Agentic Workflow - POC](#7-agentic-workflow)
 
 ## 1. Edible or Poisonous Mushroom Classification
 *folder: mushroom*
@@ -62,7 +65,13 @@ Aspects learned in the project
 
 -- see more detail: *regression/[regression_test.ipynb](https://github.com/Patcharanat/ML-Learning/blob/master/regression/regression_test.ipynb)*
 
-## 3. MBTI Classification (MBTI - IPIP)
+## 3. AI-Driven Interpretable Dynamic Customer Segmentation
+*folder: dynamic_segmentation*
+
+- [revised logic notebook](./dynamic_segmentation/revise_ecomm_logic.ipynb)
+- Related to [End-to-end E-commerce Data Project - AI-Driven Interpretable Dynamic Customer Segmentation](https://github.com/patcha-ranat/Ecommerce-Invoice-End-to-end)
+
+## 4. MBTI Classification (MBTI - IPIP)
 *folder: mbti_ipip*
 
 - [Model development notebook](./mbti_ipip/model_dev.ipynb)
@@ -79,8 +88,15 @@ About Dataset
 - [Interpreting Individual IPIP Scale Scores](https://ipip.ori.org/InterpretingIndividualIPIPScaleScores.htm)
 - [MBTI - Letters personalities explain](https://www.16personalities.com/articles/our-theory)
 
-## 4. Finance
+## 5. Finance
 *folder: finance*
 
-dataset: [Financial Transactions Dataset: Analytics](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets)
+dataset: [Financial Transactions Dataset: Analytics](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets) 
+
+## 6. OpenAI Swarm
+*folder: openai_swarm*
+
+
+## 7. Agentic Workflow
+*folder: agentic_workflow*
 
