@@ -1,0 +1,8 @@
+{
+    "internal_database_detail": {
+        "table_a": "related to customer profile history, having column 'M' (Primary Key), 'N', and 'O'",
+        "table_b": "related to transactions of customer loan request, having column 'P' (Primary Key), 'Q' which is not useful in loan application, and 'R'",
+        "table_c": "does not related to loan or customer detail",
+        "table_d": "table_d: is missing which contain columns 'S' and 'T' that have meaningful meaning to business use case."
+    }
+}

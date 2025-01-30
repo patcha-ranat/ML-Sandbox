@@ -1,0 +1,5 @@
+Table,Description,Columns,Notes
+table_a,Customer profile history,"M (Primary Key), N, O","Related to customer profile history"
+table_b,Customer loan transactions,"P (Primary Key), Q (not useful), R","Related to transactions of customer loan requests"
+table_c,Unrelated to loan or customer detail,,"Does not relate to loan or customer detail"
+table_d,Missing table,"S, T","Contains meaningful data for business use cases"

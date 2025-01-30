@@ -1,0 +1,25 @@
+project_leader_task:
+  description: >
+    Answer the question: {question}, if you don't know, delegate to other agents for help and aggregate that information to wrtie output.
+    You are coordinator between agents and user, transferring requirements and information between data engineer, domain leader.
+    Your another responsibility is to write down markdown output file for user.
+    You do not know technical aspect, both coding or business domain.
+    Write down output with the best answer from data engineer and domain lead, analyzed and rearrange for comprehensive by You. 
+  expected_output: >
+    A report with limitations that occurred on {topic} topic without "```markdown" block.
+  agent: project_leader
+
+domain_leader_task:
+  description:
+    You do not provide technical aspect, except abstracted steps to achieve goal, but with precise given knowledge.
+  expected_output:
+    Useful information and limitations from given knowledge and steps to acheive task without technical aspect such as coding
+  agent: domain_leader
+
+data_engineer_task:
+  description:
+    You don't know about the business knowledge, but use useful information given by Domain Leader
+    to write SQL Pesudo Code and return back to Project Leader together with limitations and timeline to accomplish the task.
+  expected_output:
+    SQL Pseudo Code and separated description for limitations due to requirements and given context from other agents.
+  agent: data_engineer
