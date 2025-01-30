@@ -68,6 +68,8 @@ Aspects learned in the project
 ## 3. AI-Driven Interpretable Dynamic Customer Segmentation
 *folder: dynamic_segmentation*
 
+*In progress . . .*
+
 - [revised logic notebook](./dynamic_segmentation/revise_ecomm_logic.ipynb)
 - Related to [End-to-end E-commerce Data Project - AI-Driven Interpretable Dynamic Customer Segmentation](https://github.com/patcha-ranat/Ecommerce-Invoice-End-to-end)
 
@@ -91,12 +93,17 @@ About Dataset
 ## 5. Finance
 *folder: finance*
 
+*In progress . . .*
+
 dataset: [Financial Transactions Dataset: Analytics](https://www.kaggle.com/datasets/computingvictor/transactions-fraud-datasets) 
 
 ## 6. OpenAI Swarm
-*folder: openai_swarm*
+*folder: [openai_swarm](./openai_swarm/swarm.md)*
 
+Research + POC of AI Agentic Workflow: OpenAI Swarm
 
 ## 7. Agentic Workflow
-*folder: agentic_workflow*
+*folder: [agentic_workflow](./agentic_workflow/README.md)*
+
+![project_overview](./agentic_workflow/docs/project_overview.png)
 

@@ -12,6 +12,8 @@ Markdown Report written by LLMs, answering a prompt inquiring about how to utili
 
 ![processed_logs_desc](./docs/processed_logs_desc.png)
 
+*Remark: Output from CrewAI is much better than OpenAI Swarm, especially task delegation between agents.*
+
 ## Getting Started
 
 ```bash
