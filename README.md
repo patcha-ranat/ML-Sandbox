@@ -107,3 +107,7 @@ Research + POC of AI Agentic Workflow: OpenAI Swarm
 
 ![project_overview](./agentic_workflow/docs/project_overview.png)
 
+Research + POC of AI Agentic Workflow: CrewAI
+
+## 8. Basic NN
+*folder: [basic_nn](./basic_nn/README.md)*
