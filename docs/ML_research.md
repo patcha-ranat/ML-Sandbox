@@ -5,12 +5,12 @@
 
 1. [ML Development Processes](#1-ml-development-processes)
     - [Feature Engineering](#feature-engineering)
-        - Missing Value & Data Augmentation
+        - [Missing Value & Data Augmentation](#missing-value--data-augmentation)
         - [Imbalanced Dataset](#imbalanced-dataset)
         - [Outliers Removal](#outliers-removal)
-        - Unstructure Data
-        - Scalers
-        - Encoding Categorical Data
+        - [Unstructure Data](#unstructure-data)
+        - [Scalers](#scalers)
+        - [Encoding Categorical Data]()
     - [Hyperparameters Tuning](#hyperparameters-tuning)
     - [Cross-Validation in Machine Learning](#cross-validation-in-machine-learning)
     - [Overfitting and Regularization](#overfitting-and-regularization)
@@ -43,6 +43,7 @@
     - [Association Rule](#association-rule)
     - [Time series Forecasting Features](#time-series-forecasting-features)
     - [Product Recommendation](#product-recommendation)
+    - [RAG: Retrieval-Augmented Generation](#rag-retrieval-augmented-generation)
 
 ## 1. ML Development Processes
 
@@ -69,6 +70,11 @@ Feature Engineering steps
 6. Scaling down the data (Standardization and Normalization)
 7. [Converting categorical data to numerical data (One hot encoding, Label encoding)](https://www.naukri.com/learning/articles/one-hot-encoding-vs-label-encoding/)
 8. Feature extraction (This is not exactly included in feature engineering)
+
+
+#### Missing Value & Data Augmentation
+
+*(TBD)*
 
 #### Imbalanced Dataset
 
@@ -140,6 +146,18 @@ Feature Engineering steps
 
 - Log-Transformation should be taken first before removal.
 - Use tree-based method model will less impacted by outlier.
+
+#### Unstructure Data
+
+*(TBD)*
+
+#### Scalers
+
+*(TBD)*
+
+#### Encoding Categorical Data
+
+*(TBD)*
 
 ### Hyperparameters Tuning
 
@@ -889,6 +907,22 @@ recommended model: Apriori
     - Another challenge of product recommendation systems is finding ways of increasing diversity without compromising the precision of the system.
     - While collaborative filtering methods typically use nearest neighbour methods to identify items similar users like, the inverted neighbourhood model – k-furthest neighbours – seeks to identify less similar neighbourhoods for the purpose of creating more diverse recommendations. This is achieved by recommending items disliked by people least similar to the user.
 
-**References**
+#### References
 - [What are Product Recommendation Engines? And the various versions of them?](https://towardsdatascience.com/what-are-product-recommendation-engines-and-the-various-versions-of-them-9dcab4ee26d5)
 - [How to Build a Product Recommendation System using Machine Learning - netguru](https://www.netguru.com/blog/product-recommendation-machine-learning)
+
+### RAG: Retrieval-Augmented Generation
+
+![RAG_overview](./pictures/RAG_overview.png)
+
+Processes of sourcing external information as references for LLMs to avoid fine-tuning model, but instead, providing specific knowledge to pre-trained LLMs
+
+**Overview Processes:**
+- Prepare documents for LLMs reference
+- Embed those documents into array vectors with available embedding model as preferred
+- Store that vectors into vector database (specialized database such as pinecone vector database)
+- Connect LLM to that vector database
+- When user query LLM, we transform query with embedding model and use algorithm such as cosine similarity or maximal marginal relevance (MMR) to find relevant information and return it to LLM model to answer to user query.
+
+#### References
+- [Overview concept of RAG implementation - LinkedIn](https://www.linkedin.com/pulse/chat-your-private-data-using-rag-llms-nirmal-juluru/)
