@@ -15,6 +15,7 @@
 5. [Finance](#4-finance)
 6. [OpenAI Swarm - POC](#6-openai-swarm)
 7. [Agentic Workflow - POC](#7-agentic-workflow)
+8. [Basic NN](#8-basic-nn)
 
 ## 1. Edible or Poisonous Mushroom Classification
 *folder: mushroom*
@@ -111,3 +112,5 @@ Research + POC of AI Agentic Workflow: CrewAI
 
 ## 8. Basic NN
 *folder: [basic_nn](./basic_nn/README.md)*
+
+Learning Neural Network

@@ -4,6 +4,7 @@ regression/*.csv
 mbti_ipip/data/*.csv
 finance/data
 *-checkpoint.ipynb
+basic_nn/aclImdb_v1*
 
 # python environment
 pyenv
