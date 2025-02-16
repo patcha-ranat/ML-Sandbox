@@ -1,0 +1,7 @@
+analyze:
+  description: >
+    XXX
+    XXX
+  expected_output: >
+    XXX
+  agent: analyze_agent
