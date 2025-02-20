@@ -69,7 +69,7 @@ Aspects learned in the project
 ## 3. AI-Driven Interpretable Dynamic Customer Segmentation
 *folder: dynamic_segmentation*
 
-*In progress . . .*
+![kde-ecomm-logic](./dynamic_segmentation/docs/kde-ecomm-logic.png)
 
 - [revised logic notebook](./dynamic_segmentation/revise_ecomm_logic.ipynb)
 - Related to [End-to-end E-commerce Data Project - AI-Driven Interpretable Dynamic Customer Segmentation](https://github.com/patcha-ranat/Ecommerce-Invoice-End-to-end)
