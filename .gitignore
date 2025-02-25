@@ -5,6 +5,7 @@ mbti_ipip/data/*.csv
 finance/data
 *-checkpoint.ipynb
 basic_nn/aclImdb_v1*
+data_*.csv
 
 # python environment
 pyenv
