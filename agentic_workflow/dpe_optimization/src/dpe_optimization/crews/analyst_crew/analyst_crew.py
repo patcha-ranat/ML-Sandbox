@@ -1,6 +1,8 @@
-from crewai import Agent, Crew, Process, Task
+import sqlite3
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
-from crewai.knowledge.source.csv_knowledge_source import CSVKnowledgeSource
+from crewai.tools import tool
+from crewai.knowledge.source.string_knowledge_source import StringKnowledgeSource
 
 
 @CrewBase
@@ -11,17 +13,43 @@ class AnalystCrew():
         super().__init__()
 
         self.custom_inputs = custom_inputs
+
+        # LLM Prompt
         self.agents_config = "config/agents.yaml"
         self.tasks_config = "config/tasks.yaml"
-        self.csv_source = CSVKnowledgeSource(
-            file_paths=[f"data_{self.custom_inputs.get('exec_date')}.csv"]
+        
+        # LLM Config
+        self.custom_llm = LLM(
+            model="openai/gpt-4o-mini", # call model by provider/model_name
+            temperature=0, # 0.1-0.3 for factual response (best practice)
+            timeout=300, # Longer timeout for complex tasks
+            # seed=42,
         )
+
+        # Knowledge Source: Column Name
+        content = "A list of column name is ['Date', 'Category', 'Amount', 'Note'] and table name is 'records'"
+        self.string_source = StringKnowledgeSource(
+            content=content,
+        )
+
+    @tool
+    def query_database(query: str):
+        """Execute SQL query and return the result"""
+        conn = sqlite3.connect("test.db")
+        cursor = conn.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.close()
+        return results
 
     @agent
     def analyze_agent(self) -> Agent:
         return Agent(
             config=self.agents_config["analyze_agent"],
-            llm="gpt-4o-mini"
+            llm=self.custom_llm,
+            tools=[self.query_database],
+            max_iter=10,
+            max_rpm=10
         )
     
     @task
@@ -38,6 +66,7 @@ class AnalystCrew():
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            knowledge_sources=[self.csv_source],
+            knowledge_sources=[self.string_source],
+            memory=False, # stateless execution
             verbose=True,
         )

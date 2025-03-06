@@ -34,7 +34,9 @@ class ResourceOptimizerState(BaseModel):
     
     # Crew Input
     flow_input: dict = {
-        "analyst": "Analyze financial data and conclude expense based on categories"
+        # "analyst": "Analyze financial data and conclude expense based on categories for data in year 2025"
+        "analyst": "Aggregate Income Category based on given knowledge"
+        # "analyst": "Get me the names of top 3 highest expense category from the database"
     }
     
     # Flow Output
@@ -73,7 +75,7 @@ class ResourceOptimizerFlow(Flow[ResourceOptimizerState]):
         """Extract Input to knowledge directories"""
         start_time = datetime.now()
         
-        file_name = f"data_{EXEC_DATE}"
+        file_name = f"data_{EXEC_DATE}.csv"
         if os.path.isfile(path=f"knowledge/{file_name}"):
             print(f"{file_name} does exist, skipping extract")
         else:

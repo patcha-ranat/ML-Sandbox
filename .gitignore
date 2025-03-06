@@ -6,6 +6,7 @@ finance/data
 *-checkpoint.ipynb
 basic_nn/aclImdb_v1*
 data_*.csv
+test.db
 
 # python environment
 pyenv
@@ -18,6 +19,11 @@ uv.lock
 # temp workspace notebook
 temp.ipynb
 *_report*
+temp.md
+temp.py
+
+# poc result
+backup_result/
 
 # secret
 _secret*

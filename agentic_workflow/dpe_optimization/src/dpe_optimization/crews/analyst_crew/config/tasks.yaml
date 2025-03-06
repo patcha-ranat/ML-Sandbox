@@ -1,7 +1,7 @@
 analyze:
   description: >
-    XXX
-    XXX
+    Execute {question}, the user query, and summarize the queried output for human to understand
+    by analyzing data from given reference with unlimited historical based on user question. Currency in analysis is in THB.
   expected_output: >
-    XXX
+    Summary of the analysis output in human readable text.
   agent: analyze_agent
