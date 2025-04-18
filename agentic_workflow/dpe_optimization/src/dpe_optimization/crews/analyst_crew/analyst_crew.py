@@ -4,6 +4,8 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.tools import tool
 from crewai.knowledge.source.string_knowledge_source import StringKnowledgeSource
 
+from src.dpe_optimization.tools.custom_tool import DatabaseQueryTool
+
 
 @CrewBase
 class AnalystCrew():
@@ -27,20 +29,24 @@ class AnalystCrew():
         )
 
         # Knowledge Source: Column Name
-        content = "A list of column name is ['Date', 'Category', 'Amount', 'Note'] and table name is 'records'"
+        # content = "A list of column name is ['Date', 'Category', 'Amount', 'Note'] and table name is 'records'"
+        content = "A list of column name is ['Date', 'Category', 'Amount', 'Note'], table name is 'records', and local database name is 'test.db'"
         self.string_source = StringKnowledgeSource(
             content=content,
         )
 
-    @tool
-    def query_database(query: str):
-        """Execute SQL query and return the result"""
-        conn = sqlite3.connect("test.db")
-        cursor = conn.cursor()
-        cursor.execute(query)
-        results = cursor.fetchall()
-        conn.close()
-        return results
+        # Tools
+        self.query_database = DatabaseQueryTool()
+
+    # @tool
+    # def query_database(query: str):
+    #     """Execute SQL query and return the result"""
+    #     conn = sqlite3.connect("test.db")
+    #     cursor = conn.cursor()
+    #     cursor.execute(query)
+    #     results = cursor.fetchall()
+    #     conn.close()
+    #     return results
 
     @agent
     def analyze_agent(self) -> Agent:
@@ -48,7 +54,7 @@ class AnalystCrew():
             config=self.agents_config["analyze_agent"],
             llm=self.custom_llm,
             tools=[self.query_database],
-            max_iter=10,
+            max_iter=3,
             max_rpm=10
         )
     

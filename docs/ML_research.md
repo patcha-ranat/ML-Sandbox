@@ -44,6 +44,7 @@
     - [Time series Forecasting Features](#time-series-forecasting-features)
     - [Product Recommendation](#product-recommendation)
     - [RAG: Retrieval-Augmented Generation](#rag-retrieval-augmented-generation)
+    - [Continual Learning](#continual-learning)
 
 ## 1. ML Development Processes
 
@@ -926,3 +927,80 @@ Processes of sourcing external information as references for LLMs to avoid fine-
 
 #### References
 - [Overview concept of RAG implementation - LinkedIn](https://www.linkedin.com/pulse/chat-your-private-data-using-rag-llms-nirmal-juluru/)
+
+### Continual Learning
+
+Continual learning (CL) is a set of approaches to train machine learning models incrementally, using data samples only once as they arrive.
+
+Consequently, we don’t have training, validation, and test sets in continual learning. In CL, we also want to achieve a high performance on the current batch of data. But simultaneously, we must prevent the model from forgetting what it learned from past data.
+
+*Continual learning aims to allow the model to effectively learn new concepts while ensuring it does not forget already acquired information.*
+
+#### **Use cases and applications**
+
+1. **A model needs to adapt to new data quickly**
+    - Some ML models require frequent retraining to be useful.
+    - So, the model needs to be updated (automatically) as quickly as possible to adapt to the latest data.
+2. **A model needs to be personalized**
+    - For example, many users have slightly different preferences, and with *CL*, we can use data from users' interaction to automatically retrain a model for every single one of them, gradually adjusting the model to users' preference.
+
+In general, continual learning is worth considering when your model needs to adapt to data from a stream quickly. This is often the case when deploying a model in dynamically changing environments.
+
+#### **Continual Learning Scenario**
+
+- Class Incremental (CI)
+    - A scenario which the number of target classes in a classification task is not fixed but can increase over time. It's consider as the most common in real-world ML application yet is among th most difficult to handle.
+- Domain Incremental (DI)
+    - Data distribution changes over time (*distribution shift*).
+- Task Incremental (TI)
+    - Classic multi-task learning but in an incremental way.
+    - Multi-task learning is an ML technique where one model is trained to solve multiple tasks. This approach is widespread in NLP, where one model might learn to perform text classification, named entity recognition, and text summarization. Each task will have a separate output layer, but the other model parameters can be shared.
+    - In task incremental continual learning, instead of having separate models for each task, one model is trained to solve them all, requiring the model’s architecture (hyperparameters) to expand over time.
+
+#### **Challenges in Continual Learning**
+
+Training models incrementally is challenging because ML models tend to overfit current data and forget the past. This phenomenon is called ***"catastrophic forgetting"*** and remains an open research problem.
+
+However, regardless of the scenario, training an ML model incrementally is always much more complex than classic offline training, where all the data is available upfront, and you can implement hyperparameter optimization.
+
+The writer suggested that we should check if we really need continual learning, since it's much harder than offline learning by maintaining, and monitoring capabilities. It can unnecessarily lead to overengineering.
+
+#### **Continual Learning Methods**
+
+1. Architectural Approaches
+    - The idea is to rebuild the model in a way that guarantees the preservation of already acquired knowledge and simultaneously allows it to absorb the new data. The model can be rebuilt at any time necessary, for example, when a sample of a new class arrives or after each training batch. 
+    - You can implement architectural approaches, for example, by creating dedicated, specialized subnetworks like in Progressive Neural Networks or by simply having multiple model heads (last layers), which are selected based on the input data characteristics.
+2. Regularization Approaches
+    - Regularization-based methods keep the model architecture fixed during incremental training. To make the model learn new data without forgetting the past, they use techniques like knowledge distillation, loss function modification, selection of parameters that should (or should not) be updated.
+    - The main advantage of regularization-based methods is that their implementation is almost always possible thanks to their simplicity. However, if architectural or memory-based approaches are available, the regularization-based techniques are widely used in many continual learning problems more as quickly delivered baselines rather than final solutions.
+3. Memory-based Approaches
+    - The idea is to use part of the input samples later for model training along with currently seen data to prevent catastrophic forgetting. For example, a training input batch may consist of current and randomly selected examples from memory.
+    - These methods are very popular in solving various continual learning problems thanks to their effectiveness and simple implementation. It has been empirically shown that memory-based methods are the most effective in all three continual learning scenarios. But, of course, this technique requires constant access to past data, which is impossible in many cases.
+
+#### **Tips for implementing Continual Learning**
+
+1. Precisely identify your objective
+    - Do you want the model to adapt to new data as quickly as possible?
+2. Carefully select the model architecture
+    - Deep learning models behave differently under incremental training, even if it seems that they are very similar to each other.
+    - For example, convolutional neural networks achieve significantly better accuracy in continual learning when they use batch normalization and skip connections.
+3. Start simple, then improve
+    1. Check if you really need continual learning.
+        - **It’s crucial to be aware that adopting continual learning is a progressive process, and you might discover that you don’t need it along the way. Do not overthink your solution and only implement CL approaches if they genuinely benefit you. For example, if you have one model that has to be retrained once a year, it is probably not worth it.**
+    2. First, try a naive, straightforward solution.
+    3. Choose the right method for your problem.
+    4. Experiment as much as you can.
+    5. Take the time to understand the problems.
+4. Choose your tools wisely
+    - You’ve seen many methods described in scientific papers that might be worth trying, but they seem time-consuming to implement. Fortunately, in most cases, there is no need to implement the method on your own.
+    - **Avalanche**: is an end-to-end continual learning library based on PyTorch. Open-source, fast prototyping, training, and evaluation of continual learning methods.
+    - **Continuum** is a library providing tools for creating continual learning scenarios from existing datasets. Continuum is very mature and easy to use, making it one of the most reliable continual learning libraries.
+    - **Renate** is a library designed by the AWS Labs.
+5. If you have access to old data, don’t hesitate to use it.
+
+
+You can combine methods from different groups to maximize gains. Various experiments show that mixed approaches can be beneficial in many scenarios.
+
+#### **Reference**
+
+- [Continual Learning: Methods and Application - Neptune.ai](https://neptune.ai/blog/continual-learning-methods-and-application)

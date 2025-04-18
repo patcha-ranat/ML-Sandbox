@@ -14,3 +14,6 @@ crewai-tools==0.32.1
 
 # clothing_image
 tensorflow==2.18.0
+
+# finance
+pyspark==3.5.5

@@ -10,6 +10,8 @@ from dpe_optimization.crews.analyst_crew.analyst_crew import AnalystCrew
 from dpe_optimization.crews.solution_crew.solution_crew import SolutionCrew
 from dpe_optimization.crews.checker_crew.checker_crew import CheckerCrew
 
+from src.dpe_optimization.tools.custom_tool import DatabaseQueryTool
+
 
 # Set Logger
 # logging.basicConfig()
@@ -71,71 +73,82 @@ class ResourceOptimizerState(BaseModel):
 class ResourceOptimizerFlow(Flow[ResourceOptimizerState]):
 
     @start()
-    def extract_read_task(self):
-        """Extract Input to knowledge directories"""
-        start_time = datetime.now()
+    def observer_stage(self):
+        """Extract Data Based on Agents Specialized"""
+        # # TODO: need a custom tool to connect with delta table
+        # # TODO: need data dependency check logic (Data integrity)
+        # # TODO: create data models based on monitoring aspect
+        # start_time = datetime.now()
         
-        file_name = f"data_{EXEC_DATE}.csv"
-        if os.path.isfile(path=f"knowledge/{file_name}"):
-            print(f"{file_name} does exist, skipping extract")
-        else:
-            print(f"{file_name} does not exist, starting knowledge input extraction")
-            # extract metrics to files by sql
-            pass
+        # file_name = f"data_{EXEC_DATE}.csv"
+        # if os.path.isfile(path=f"knowledge/{file_name}"):
+        #     print(f"{file_name} does exist, skipping extract")
+        # else:
+        #     print(f"{file_name} does not exist, starting knowledge input extraction")
+        #     # extract metrics to files by sql
+        #     pass
         
-        # log output
-        end_time = datetime.now()
-        self.state.flow_output["extract_read_task"]["execution_time"] = end_time - start_time
+        # # log output
+        # end_time = datetime.now()
+        # self.state.flow_output["extract_read_task"]["execution_time"] = end_time - start_time
 
-    @router(extract_read_task)
-    def analyze(self):
-        start_time = datetime.now()
+        # TODO: This is for Custom Tool Test, deleted after!
+        result = DatabaseQueryTool(database="test.db", query="sql_script/test.sql")._run()
+        print(result)
+        return result
 
-        # need a crew
-        inputs = {
-            "exec_date": EXEC_DATE,
-            "question": self.state.flow_input.get("analyst")
-        }
-        result = AnalystCrew(custom_inputs=inputs).crew().kickoff(inputs=inputs)
-        end_time = datetime.now()
+
+    @router(observer_stage)
+    def analyzer_stage(self):
+        # # TODO: need a crew?? (if logic is clearly clarified by policy or criteria, no crew needed)
+        # # if policy changes frequently, need a crew to reduce manual logic change frequency
+        # # Use agent to generate different SQL scripts to analyze each data model
+        # start_time = datetime.now()
+        # inputs = {
+        #     "exec_date": EXEC_DATE,
+        #     "question": self.state.flow_input.get("analyst")
+        # }
+        # result = AnalystCrew(custom_inputs=inputs).crew().kickoff(inputs=inputs)
+        # end_time = datetime.now()
         
-        # log output
-        self.state.flow_output["analyze_task"]["execution_time"] = end_time - start_time
-        self.state.flow_output["analyze_task"]["output"] = result.raw
-        self.state.flow_output["analyze_task"]["token_usage"] = result.token_usage.__dict__
+        # # log output
+        # self.state.flow_output["analyze_task"]["execution_time"] = end_time - start_time
+        # self.state.flow_output["analyze_task"]["output"] = result.raw
+        # self.state.flow_output["analyze_task"]["token_usage"] = result.token_usage.__dict__
         
         # if result is True:
         #     return "detect"
         # else:
         #     return "not detect"
 
-    # @listen(or_("detect", "failed"))
-    # def provide_solution():
-    #     # need a crew
+        # TODO: This is for Custom Tool Test, deleted after!
+        inputs = {
+            "exec_date": EXEC_DATE,
+            "question": "Can you generate a couple of simple queries, execute it on atrget database and tell me some simple insight from data?"
+        }
+        result = AnalystCrew(custom_inputs=inputs).crew().kickoff(inputs=inputs)
+        print(result.raw)
+
+
+    # @listen("detect")
+    # def advisor_stage(self):
+    #     # TODO: need a crew
     #     result = SolutionCrew()
     #     pass
 
-    # @router(provide_solution)
-    # def check_result(self):
-    #     # need a crew
-    #     result = CheckerCrew()
-    #     if result is True:
-    #         return "success"
-    #     else:
-    #         return "failed"
+    # @listen(or_(advisor_stage, "not detect"))
+    # def storage_stage(self):
+    #     # TODO: wrtie state output to somewhere, maybe a logs table
+    #     self.state.metadata["execution_time"] = datetime.now() - FLOW_TIMER
+    #     with open("state_output.json", "w") as f:
+    #         json.dump(self.state.convert_execution_time().to_dict(), f, indent=4)
+    #         f.close()
+    #     print("Writing State File Output Success")
 
-    # @listen(or_("success", "not detect"))
-    @listen(analyze)
-    def write_output_send_noti(self):
-        self.state.metadata["execution_time"] = datetime.now() - FLOW_TIMER
-        with open("state_output.json", "w") as f:
-            json.dump(self.state.convert_execution_time().to_dict(), f, indent=4)
-            f.close()
-        print("Writing State File Output Success")
-
-    # @listen(write_output_send_noti)
-    # def implement(self):
-    #     # need a crew
+    # @listen(storage_stage)
+    # def notifier_stage(self):
+    #     # TODO: need a crew for generating summary
+    #     # TODO: need a tool to alert via email
     #     pass
 
 
