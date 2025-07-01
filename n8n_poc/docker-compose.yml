@@ -1,0 +1,54 @@
+services:
+  n8n_postgres:
+    build:
+      context: ./n8n
+    image: postgres:16
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    volumes:
+      - n8n_db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - n8n_network
+
+  n8n:
+    build:
+      context: ./n8n
+    image: docker.n8n.io/n8nio/n8n:1.99.1
+    restart: always
+    ports:
+      - 5678:5678
+    environment:
+      # Postgres
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=n8n_postgres # service name
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    volumes:
+      - n8n_storage:/home/node/.n8n
+    depends_on:
+      n8n_postgres:
+        condition: service_healthy
+    networks:
+      - n8n_network
+
+volumes:
+  n8n_storage:
+  n8n_db_storage:
+
+networks:
+  n8n_network:

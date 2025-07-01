@@ -28,3 +28,6 @@ backup_result/
 # secret
 _secret*
 .env
+*.tfstate*
+.terraform*
+secret.tfvars
