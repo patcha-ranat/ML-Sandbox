@@ -1,11 +1,11 @@
 variable "project" {
-  type      = string
-  sensitive = true
+  type    = string
+  default = "your-gcp-project-name"
 }
 
 variable "bucket_name" {
-  type      = string
-  sensitive = true
+  type    = string
+  default = "n8n_public_artifact_bucket"
 }
 
 variable "region" {

@@ -18,5 +18,16 @@ resource "google_storage_bucket" "backend_bucket" {
   location      = var.region
   project       = var.project
   storage_class = "STANDARD"
-  force_destroy = "true"
+  force_destroy = true
+  versioning {
+    enabled = true
+  }
+  lifecycle_rule {
+    condition {
+      age = 90
+    }
+    action {
+      type = "Delete"
+    }
+  }
 }

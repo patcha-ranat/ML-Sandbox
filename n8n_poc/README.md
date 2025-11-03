@@ -1,52 +1,86 @@
-# n8n Docker Local
+# n8n Docker Local and Self Hosting with Serverless
 
 *Patcharanat P.*
 
-Only focus on n8n deployment
+## Table of Contents
+1. [Getting Started Local](#1-getting-started-local)
+2. [Getting Started Cloud](#2-getting-started-cloud)
+3. [References](#3-references)
 
-## Local Development
-
+## 1. Getting Started Local
 ```bash
-docker compose up
+# create .env file to use with docker-compose.yml
+cp local/.env.example local/.env
+
+# start
+docker compose -f local/docker-compose.yml up --build
+
+# access the app via: http://localhost:5678
+
+# stop
+docker compose -f local/docker-compose.yml down -v
 ```
 
-## Cloud Deployment
-
+## 2. Getting Started Cloud
 ```bash
-# Initial GCS for storing remote backend
-terraform -chdir="terraform/00-remote-backend" init
-# terraform fmt
-# terraform plan
-terraform -chdir="terraform/00-remote-backend" plan -var-file="secret.tfvars"
-terraform -chdir="terraform/00-remote-backend" apply -var-file="secret.tfvars"
-# terraform -chdir="terraform/00-remote-backend" destroy -var-file="secret.tfvars"
+# init
+cd 00-remote-backend && \
+    terraform init && \
+    terraform plan && \
+    terraform apply -auto-approve && \
+    cd ..
 
-# Artifact Registry - separated for automation benefits (pull-push image between steps)
-terraform -chdir="terraform/01-registry" init
-terraform -chdir="terraform/01-registry" plan -var-file="secret.tfvars"
-terraform -chdir="terraform/01-registry" apply -var-file="secret.tfvars"
-# terraform -chdir="terraform/01-registry" destroy -var-file="secret.tfvars"
+cd 01-registry && \
+    terraform init && \
+    cd ..
 
-# Cloud SQL - long create time
-terraform -chdir="terraform/02-backend-db" init
-terraform -chdir="terraform/02-backend-db" plan -var-file="secret.tfvars"
-terraform -chdir="terraform/02-backend-db" apply -var-file="secret.tfvars"
-# terraform -chdir="terraform/02-backend-db" destroy -var-file="secret.tfvars"
+cd 02-backend-db && \
+    terraform init && \
+    cd ..
 
-# Cloud Run - deploy/undeploy service app
-terraform -chdir="terraform/03-app" init
-terraform -chdir="terraform/03-app" plan -var-file="secret.tfvars"
-terraform -chdir="terraform/03-app" apply -var-file="secret.tfvars"
-terraform -chdir="terraform/03-app" destroy -var-file="secret.tfvars"
+cd 03-app && \
+    terraform init && \
+    cd ..
+
+# provision
+# terraform -chdir=00-remote-backend apply -auto-approve
+terraform -chdir=01-registry apply -auto-approve
+terraform -chdir=02-backend-db apply -auto-approve
+
+# pre-requisite before deploying app
+export N8N_IMAGE_VERSION="1.100.0"
+export GCP_REGION="asia-southeast1"
+export GCP_PROJECT="your-gcp-project-name"
+export N8N_PRIVATE_REGISTRY="n8n-image-repo"
+
+gcloud auth configure-docker ${GCP_REGION}-docker.pkg.dev
+
+docker pull docker.n8n.io/n8nio/n8n:${N8N_IMAGE_VERSION}
+
+docker tag docker.n8n.io/n8nio/n8n:${N8N_IMAGE_VERSION} ${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${N8N_PRIVATE_REGISTRY}/n8nio/n8n:${N8N_IMAGE_VERSION}
+
+docker push ${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${N8N_PRIVATE_REGISTRY}/n8nio/n8n:${N8N_IMAGE_VERSION}
+
+# deploy app
+terraform -chdir=03-app apply -auto-approve
+
+# access the app via the link terraform provided after provisioning
+
+# de-provision
+terraform -chdir=03-app destroy -auto-approve
+terraform -chdir=02-backend-db destroy -auto-approve
+terraform -chdir=01-registry destroy -auto-approve
+# terraform -chdir=00-remote-backend destroy -auto-approve
 ```
 
-References:
+## 3. References
 - n8n
     - [n8n - Hosting with docker](https://docs.n8n.io/hosting/installation/docker/)
     - [n8n - Hosting with docker compose](https://docs.n8n.io/hosting/installation/server-setups/docker-compose/)
     - [GitHub n8n - docker compose with postgres example](https://github.com/n8n-io/n8n-hosting/blob/main/docker-compose/withPostgres/README.md)
     - [GitHub n8n](https://github.com/n8n-io/n8n?tab=readme-ov-file)
-    - [Google: OAuth2 single service](https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/?utm_source=n8n_app&utm_medium=credential_settings&utm_campaign=create_new_credentials_modal)
+    - [Google: OAuth2 single service](https://docs.n8n.io/integrations/builtin/credentials/google/oauth-single-service/)
+    - [Hosting n8n on Google Cloud Run](https://docs.n8n.io/hosting/installation/server-setups/google-cloud-run/)
 - Gemini
     - [Model & Pricing](https://ai.google.dev/gemini-api/docs/pricing)
     - [Getting API Key](https://aistudio.google.com/u/1/apikey)

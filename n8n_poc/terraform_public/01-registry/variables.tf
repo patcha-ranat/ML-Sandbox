@@ -1,6 +1,6 @@
 variable "project" {
-  type      = string
-  sensitive = true
+  type    = string
+  default = "your-gcp-project-name"
 }
 
 variable "region" {

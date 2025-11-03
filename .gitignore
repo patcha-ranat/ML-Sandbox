@@ -29,5 +29,8 @@ backup_result/
 _secret*
 .env
 *.tfstate*
-.terraform*
+*.terraform*
 secret.tfvars
+
+# temp
+n8n_poc/local/src/

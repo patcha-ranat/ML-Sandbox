@@ -1,7 +1,5 @@
 services:
   n8n_postgres:
-    build:
-      context: ./n8n
     image: postgres:16
     restart: always
     ports:
@@ -13,20 +11,13 @@ services:
       - POSTGRES_NON_ROOT_USER
       - POSTGRES_NON_ROOT_PASSWORD
     volumes:
-      - n8n_db_storage:/var/lib/postgresql/data
+      - ./src/n8n_db_storage:/var/lib/postgresql/data
       - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
-      interval: 5s
-      timeout: 5s
-      retries: 10
     networks:
       - n8n_network
 
   n8n:
-    build:
-      context: ./n8n
-    image: docker.n8n.io/n8nio/n8n:1.99.1
+    image: docker.n8n.io/n8nio/n8n:1.100.0
     restart: always
     ports:
       - 5678:5678
@@ -39,16 +30,25 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
     volumes:
-      - n8n_storage:/home/node/.n8n
-    depends_on:
-      n8n_postgres:
-        condition: service_healthy
+      - ./src/n8n_storage:/home/node/.n8n
     networks:
       - n8n_network
 
-volumes:
-  n8n_storage:
-  n8n_db_storage:
+  mysql-db-service:
+    image: mysql:9.3.0
+    container_name: mysql_db_container
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./src/mysql_db_data:/var/lib/mysql
+    restart: always
+    networks:
+      - n8n_network
 
 networks:
   n8n_network:
